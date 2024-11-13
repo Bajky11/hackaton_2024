@@ -10,5 +10,15 @@
   "parserOptions": {
     "ecmaVersion": 2015
   },
-  "rules": {}
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ],
+    "prefer-arrow-callback": "error",
+    "func-style": [
+      "error",
+      "expression"
+    ]
+  }
 }

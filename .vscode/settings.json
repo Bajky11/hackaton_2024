@@ -2,5 +2,16 @@
     "cSpell.words": [
         "automations",
         "reduxjs"
-    ]
+    ],
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true // Opraví všechny chyby nalezené ESLintem
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ], // Ujistěte se, že ESLint je nastaven pro správné typy souborů
+    "eslint.format.enable": true
 }

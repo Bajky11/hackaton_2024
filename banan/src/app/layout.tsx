@@ -19,7 +19,7 @@ export default function RootLayout({
   // TODO: When initial state of redux is changed, the redux-persist wont allow app to use it. So it needs to be purged. But this behavior is not wanted.
   useEffect(() => {
     // Purge the persisted state once
-    //persistor.purge();
+    persistor.purge();
   }, []);
 
   return (

@@ -7,9 +7,8 @@ export type DrawerItem = {
 
 const drawerItems = [
   { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Sas', path: '/sas' },
   { name: 'Automations', path: '/automations' },
-  { name: 'Jobs', path: '/jobs' },
-  { name: 'Runners', path: '/runners' },
   { name: 'Metrics', path: '/metrics' },
 ];
 

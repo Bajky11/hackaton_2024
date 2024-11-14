@@ -32,6 +32,7 @@ export default function RootLayout({
               <Stack direction={'column'} flex={1}>
                 <Header />
                 <Box
+                  p={1}
                   sx={{
                     flex: 1,
                     overflowY: 'auto',

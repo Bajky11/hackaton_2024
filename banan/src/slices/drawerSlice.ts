@@ -6,9 +6,11 @@ export type DrawerItem = {
 };
 
 const drawerItems = [
-  { name: 'Home', path: '/' },
-  { name: 'About', path: '/' },
-  { name: 'Contact', path: '/' },
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Automations', path: '/automations' },
+  { name: 'Jobs', path: '/jobs' },
+  { name: 'Runners', path: '/runners' },
+  { name: 'Metrics', path: '/metrics' },
 ];
 
 const initialState = {

@@ -2,16 +2,20 @@ import { configureStore } from '@reduxjs/toolkit'
 // Or from '@reduxjs/toolkit/query/react'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { automationApi } from './services/automation'
+import { runnerApi } from './services/runner'
 
 export const store = configureStore({
     reducer: {
         // Add the generated reducer as a specific top-level slice
         [automationApi.reducerPath]: automationApi.reducer,
+        [runnerApi.reducerPath]: runnerApi.reducer,
     },
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(automationApi.middleware),
+        getDefaultMiddleware()
+            .concat(automationApi.middleware)
+            .concat(runnerApi.middleware),
 })
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors

@@ -5,20 +5,41 @@
     "node": true
   },
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended", // TypeScript pravidla
+    "plugin:prettier/recommended" // Integrace s Prettier pro formátování
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2015
+    "ecmaVersion": 2020,
+    "sourceType": "module"
   },
+  "plugins": [
+    "@typescript-eslint", // TypeScript plugin
+    "prettier" // Prettier plugin pro formátování
+  ],
   "rules": {
-    "semi": [
+    "semi": ["error", "always"], // Vyžaduje středníky
+    "quotes": ["error", "single"], // Používá jednoduché uvozovky
+    "no-unused-vars": "warn", // Varuje o nevyužitých proměnných
+    "@typescript-eslint/no-unused-vars": "off", // Také nastavte toto pravidlo jako varování
+    "eqeqeq": "error", // Vyžaduje striktní porovnání (=== a !==)
+    "no-var": "error", // Zakazuje použití var, doporučuje let/const
+    "prefer-const": "error", // Doporučuje použití const tam, kde je to možné
+    "arrow-spacing": [
       "error",
-      "always"
+      {
+        // Vynucuje mezeru kolem šipek ve funkcích
+        "before": true,
+        "after": true
+      }
     ],
-    "prefer-arrow-callback": "error",
-    "func-style": [
-      "error",
-      "expression"
-    ]
+    "prefer-template": "error", // Doporučuje použití template literálů místo řetězcové konkatenace
+    "object-shorthand": "error", // Vyžaduje zkratky objektů, pokud je to možné
+    "no-console": "warn", // Varuje před použitím console.log (přísnější kód)
+    "prettier/prettier": "error", // Zajišťuje, že Prettier pravidla jsou vynucována
+    "@typescript-eslint/no-explicit-any": "warn", // Varuje před použitím typu 'any'
+    "@typescript-eslint/explicit-module-boundary-types": "off" // Nepožaduje explicitní typování u funkcí
+    //"@typescript-eslint/no-non-null-assertion": "error"  // Zakazuje použití ! operátoru
   }
 }

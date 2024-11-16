@@ -39,15 +39,63 @@ interface QueryFilter {
   value: string | number;
 }
 
-type Order = 'asc' | 'desc';
+export enum Order {
+  ASC = 'asc',
+  DESC = 'desc',
+};
 
 export type UrlParams = {
+  /**
+   * `base` is the base URL that the query will target.
+   * If not specified, it will use the default value. For example, it could be 'automations' or any other base URL you want to use.
+   * @example 'automations'
+   */
   base?: string;
+
+  /**
+   * `page` specifies the page number for pagination.
+   * If not defined, the default value will be used.
+   * @example 1
+   */
   page?: number;
+
+  /**
+   * `limit` specifies the number of items per page.
+   * If not specified, the default value will be used.
+   * @example 10
+   */
   limit?: number;
+
+  /**
+   * `sort` specifies the property by which the results should be sorted.
+   * You can specify any property for sorting, such as 'name', 'date', etc.
+   * @example 'name'
+   */
   sort?: string;
+
+  /**
+   * `order` specifies the sort direction. It can be 'asc' (ascending) or 'desc' (descending).
+   * @example 'asc'
+   */
   order?: Order;
+
+  /**
+   * `search` allows you to filter results by a search term.
+   * This parameter is optional and can be used to filter records by name or other properties.
+   * @example 'automation'
+   */
   search?: string;
+
+  /**
+   * `query` is an array of filters for more complex queries.
+   * Each filter contains `property`, `operator`, and `value`.
+   * You can use operators like 'eq', 'ne', 'gt', 'lt', etc.
+   * @example 
+   * [
+   *   { property: 'status', operator: 'eq', value: 'active' },
+   *   { property: 'name', operator: 'like', value: 'automation' }
+   * ]
+   */
   query?: QueryFilter[];
 };
 

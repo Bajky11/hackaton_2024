@@ -18,6 +18,11 @@ export type Job = {
   timestamp: string;
 };
 
+export type RunnerMetric = {
+  runner: string;
+  metrics: Metric[];
+};
+
 export type Metric = {
   cpu: number;
   memory: number;
@@ -47,7 +52,7 @@ export const runnerApi = createApi({
       query: () => 'metrics',
     }),
     getMetric: builder.query<Metric, string>({
-      query: (id) => `metrics/${id}`,
+      query: (runnerId) => `metrics/${runnerId}`,
     }),
   }),
 });

@@ -11,3 +11,17 @@ export const customBaseQuery = fetchBaseQuery({
     return headers;
   },
 });
+
+export const urlParamsBuilder = (base: string, page?: number, limit?: number): string => {
+  let url = base;
+  const params = new URLSearchParams();
+
+  if (page !== undefined) params.append('page', page.toString());
+  if (limit !== undefined) params.append('limit', limit.toString());
+
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+
+  return url;
+}

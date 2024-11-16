@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { customBaseQuery } from './settings';
+import { customBaseQuery, urlParamsBuilder } from './settings';
 
 export type Automation = {
   id: string;
@@ -38,8 +38,8 @@ export const automationApi = createApi({
   reducerPath: 'automationApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getAutomations: builder.query<Automation[], void>({
-      query: () => 'automations',
+    getAutomations: builder.query<Automation[], { page?: number; limit?: number }>({
+      query: ({ page, limit = -1 } = {}) => urlParamsBuilder('automations', page, limit),
     }),
     getAutomation: builder.query<Automation, string>({
       query: (id) => `automations/${id}`,

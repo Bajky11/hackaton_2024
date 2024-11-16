@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { UrlParams, customBaseQuery, defaultUrlParams, urlParamsBuilder } from './settings';
+import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
 
 export type Automation = {
   id: string;
@@ -40,7 +40,7 @@ export const automationApi = createApi({
   endpoints: (builder) => ({
     getAutomationList: builder.query<Automation[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'automations', ...defaultUrlParams, ...params });
+        return urlParamsBuilder({ base: 'automations', ...params });
       },
     }),
     getAutomationDetail: builder.query<Automation, string>({
@@ -51,7 +51,7 @@ export const automationApi = createApi({
     }),
     getAutomationTypeList: builder.query<AutomationType[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'automation-types', ...defaultUrlParams, ...params });
+        return urlParamsBuilder({ base: 'automation-types', ...params });
       },
     }),
     getAutomationTypeDetail: builder.query<AutomationType, string>({

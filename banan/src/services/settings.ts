@@ -99,15 +99,10 @@ export type UrlParams = {
   query?: QueryFilter[];
 };
 
-export const defaultUrlParams: UrlParams = {
-  page: 1,
-  limit: -1,
-};
-
 export const urlParamsBuilder = ({
   base,
-  page,
-  limit,
+  page = 1,
+  limit = -1,
   sort,
   order,
   search,

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { UrlParams, customBaseQuery, defaultUrlParams, urlParamsBuilder } from './settings';
+import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
 
 export type Runner = {
   id: string;
@@ -54,7 +54,7 @@ export const runnerApi = createApi({
   endpoints: (builder) => ({
     getRunnerList: builder.query<Runner[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'runners', ...defaultUrlParams, ...params });
+        return urlParamsBuilder({ base: 'runners', ...params });
       },
     }),
     getRunnerDetail: builder.query<Runner, string>({
@@ -62,7 +62,7 @@ export const runnerApi = createApi({
     }),
     getJobList: builder.query<Job[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'jobs', ...defaultUrlParams, ...params });
+        return urlParamsBuilder({ base: 'jobs', ...params });
       },
     }),
     getJobDetail: builder.query<Job, string>({
@@ -70,7 +70,7 @@ export const runnerApi = createApi({
     }),
     getMetricWithRunnerList: builder.query<MetricWithRunner[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'metrics', ...defaultUrlParams, ...params });
+        return urlParamsBuilder({ base: 'metrics', ...params });
       },
     }),
     getMetricWithRunnerDetail: builder.query<MetricWithRunner, string>({

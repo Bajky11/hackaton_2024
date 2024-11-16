@@ -40,8 +40,7 @@ export const automationApi = createApi({
   endpoints: (builder) => ({
     getAutomationList: builder.query<Automation[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        const finalParams = { base: 'automations', ...defaultUrlParams, ...params };
-        return urlParamsBuilder(finalParams);
+        return urlParamsBuilder({ base: 'automations', ...defaultUrlParams, ...params });
       },
     }),
     getAutomationDetail: builder.query<Automation, string>({
@@ -52,8 +51,7 @@ export const automationApi = createApi({
     }),
     getAutomationTypeList: builder.query<AutomationType[], void | Partial<UrlParams>>({
       query: (params: UrlParams = {}) => {
-        const finalParams = { base: 'automation-types', ...defaultUrlParams, ...params };
-        return urlParamsBuilder(finalParams);
+        return urlParamsBuilder({ base: 'automation-types', ...defaultUrlParams, ...params });
       },
     }),
     getAutomationTypeDetail: builder.query<AutomationType, string>({

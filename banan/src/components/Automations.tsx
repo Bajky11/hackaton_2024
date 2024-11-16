@@ -13,11 +13,11 @@ import {
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDropDown';
 import { useRouter } from 'next/navigation';
 import InfoIcon from '@mui/icons-material/Info';
-import { QueryOperator } from '@/services/settings';
+import { Order, QueryOperator } from '@/services/settings';
 
 const Automations = () => {
   const router = useRouter();
-  const { data, error, isLoading } = useGetAutomationListQuery({ query: [{ property: "state", operator: QueryOperator.EQ, value: "INITIAL" }] });
+  const { data, error, isLoading } = useGetAutomationListQuery();
 
   function resolveColor(state: string) {
     switch (state) {

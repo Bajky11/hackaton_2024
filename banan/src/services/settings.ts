@@ -12,11 +12,30 @@ export const customBaseQuery = fetchBaseQuery({
   },
 });
 
-type QueryOperators = 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'like' | 'start' | 'end';
+export enum QueryOperator {
+  /** Filters by equality */
+  EQ = 'eq',
+  /** Filters by inequality */
+  NE = 'ne',
+  /** Filters by greater */
+  GT = 'gt',
+  /** Filters by greater or equal */
+  GTE = 'gte',
+  /** Filters by lower */
+  LT = 'lt',
+  /** Filters by lower or equal */
+  LTE = 'lte',
+  /** Filters by partial match */
+  LIKE = 'like',
+  /** Filters properties that start with a value */
+  START = 'start',
+  /** Filters properties that end with a value */
+  END = 'end',
+}
 
 interface QueryFilter {
   property: string;
-  operator: QueryOperators;
+  operator: QueryOperator;
   value: string | number;
 }
 

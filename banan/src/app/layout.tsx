@@ -9,12 +9,19 @@ import Header from '@/components/Header';
 import { Box } from '@mui/system';
 import { header_height } from '@/constants';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useEffect } from 'react';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // TODO: When initial state of redux is changed, the redux-persist wont allow app to use it. So it needs to be purged. But this behavior is not wanted.
+  useEffect(() => {
+    // Purge the persisted state once
+    persistor.purge();
+  }, []);
+
   return (
     <html lang="en">
       <body>
@@ -25,6 +32,7 @@ export default function RootLayout({
               <Stack direction={'column'} flex={1}>
                 <Header />
                 <Box
+                  p={1}
                   sx={{
                     flex: 1,
                     overflowY: 'auto',

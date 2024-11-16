@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetAutomationsQuery } from '@/services/automation';
+import { useGetAutomationListQuery } from '@/services/automation';
 import React from 'react';
 import {
   Accordion,
@@ -16,7 +16,7 @@ import InfoIcon from '@mui/icons-material/Info';
 
 const Automations = () => {
   const router = useRouter();
-  const { data, error, isLoading } = useGetAutomationsQuery();
+  const { data, error, isLoading } = useGetAutomationListQuery({ query: [{ property: "state", operator: "eq", value: "INITIAL" }] });
 
   function resolveColor(state: string) {
     switch (state) {

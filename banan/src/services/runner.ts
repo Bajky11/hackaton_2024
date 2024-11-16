@@ -1,24 +1,38 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { customBaseQuery } from './settings';
+import { UrlParams, customBaseQuery, defaultUrlParams, urlParamsBuilder } from './settings';
 
 export type Runner = {
   id: string;
-  state: string;
+  state: RunnerState;
   runner_group: string;
   organization: string;
 };
 
+export enum RunnerState {
+  IDLE = 'idle',
+  ACTIVE = 'active',
+  FAILED = 'failed',
+  OFFLINE = 'offline',
+}
+
 export type Job = {
   id: string;
-  state: string;
+  state: JobState;
   organization: string;
   SAS: string;
   runner: string;
   timestamp: string;
 };
 
-export type RunnerMetric = {
+export enum JobState {
+  SUCCESS = 'success',
+  FAILED = 'failed',
+  QUEUED = 'queued',
+  IN_PROGRESS = 'in_progress',
+}
+
+export type MetricWithRunner = {
   runner: string;
   metrics: Metric[];
 };
@@ -32,27 +46,38 @@ export type Metric = {
   fs_writes: number;
 };
 
+export type SAS = string;
+
 export const runnerApi = createApi({
   reducerPath: 'runnerApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getRunners: builder.query<Runner[], void>({
-      query: () => 'runners',
+    getRunnerList: builder.query<Runner[], void | Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => {
+        return urlParamsBuilder({ base: 'runners', ...defaultUrlParams, ...params });
+      },
     }),
-    getRunner: builder.query<Runner, string>({
+    getRunnerDetail: builder.query<Runner, string>({
       query: (id) => `runners/${id}`,
     }),
-    getJobs: builder.query<Job[], void>({
-      query: () => 'jobs',
+    getJobList: builder.query<Job[], void | Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => {
+        return urlParamsBuilder({ base: 'jobs', ...defaultUrlParams, ...params });
+      },
     }),
-    getJob: builder.query<Job, string>({
+    getJobDetail: builder.query<Job, string>({
       query: (id) => `jobs/${id}`,
     }),
-    getMetrics: builder.query<Metric[], void>({
-      query: () => 'metrics',
+    getMetricWithRunnerList: builder.query<MetricWithRunner[], void | Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => {
+        return urlParamsBuilder({ base: 'metrics', ...defaultUrlParams, ...params });
+      },
     }),
-    getMetric: builder.query<Metric, string>({
+    getMetricWithRunnerDetail: builder.query<MetricWithRunner, string>({
       query: (runnerId) => `metrics/${runnerId}`,
+    }),
+    getSasList: builder.query<SAS[], void>({
+      query: () => `sas`,
     }),
   }),
 });
@@ -60,10 +85,10 @@ export const runnerApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useGetRunnersQuery,
-  useGetRunnerQuery,
-  useGetJobsQuery,
-  useGetJobQuery,
-  useGetMetricsQuery,
-  useGetMetricQuery,
+  useGetRunnerListQuery,
+  useGetRunnerDetailQuery,
+  useGetJobListQuery,
+  useGetJobDetailQuery,
+  useGetMetricWithRunnerListQuery,
+  useGetMetricWithRunnerDetailQuery,
 } = runnerApi;

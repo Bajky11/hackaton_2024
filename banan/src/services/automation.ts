@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { customBaseQuery, urlParamsBuilder } from './settings';
+import { UrlParams, customBaseQuery, defaultUrlParams, urlParamsBuilder } from './settings';
 
 export type Automation = {
   id: string;
@@ -38,19 +38,25 @@ export const automationApi = createApi({
   reducerPath: 'automationApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getAutomations: builder.query<Automation[], { page?: number; limit?: number }>({
-      query: ({ page, limit = -1 } = {}) => urlParamsBuilder('automations', page, limit),
+    getAutomationList: builder.query<Automation[], void | Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => {
+        const finalParams = { base: 'automations', ...defaultUrlParams, ...params };
+        return urlParamsBuilder(finalParams);
+      },
     }),
-    getAutomation: builder.query<Automation, string>({
+    getAutomationDetail: builder.query<Automation, string>({
       query: (id) => `automations/${id}`,
     }),
-    getAutomationLogs: builder.query<AutomationLog[], string>({
+    getAutomationDetailLogs: builder.query<AutomationLog[], string>({
       query: (id) => `automations/${id}/logs`,
     }),
-    getAutomationTypes: builder.query<AutomationType[], void>({
-      query: () => 'automation-types',
+    getAutomationTypeList: builder.query<AutomationType[], void | Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => {
+        const finalParams = { base: 'automation-types', ...defaultUrlParams, ...params };
+        return urlParamsBuilder(finalParams);
+      },
     }),
-    getAutomationType: builder.query<AutomationType, string>({
+    getAutomationTypeDetail: builder.query<AutomationType, string>({
       query: (type) => `automation-types/${type}`,
     }),
   }),
@@ -59,9 +65,9 @@ export const automationApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useGetAutomationsQuery,
-  useGetAutomationQuery,
-  useGetAutomationLogsQuery,
-  useGetAutomationTypesQuery,
-  useGetAutomationTypeQuery,
+  useGetAutomationListQuery,
+  useGetAutomationDetailQuery,
+  useGetAutomationDetailLogsQuery,
+  useGetAutomationTypeListQuery,
+  useGetAutomationTypeDetailQuery,
 } = automationApi;

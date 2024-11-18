@@ -17,6 +17,7 @@
     "@mui/material": "^6.1.7",
     "@reduxjs/toolkit": "^2.3.0",
     "better-sqlite3": "^11.5.0",
+    "highcharts-react-official": "^3.2.1",
     "next": "15.0.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",

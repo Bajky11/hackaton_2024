@@ -5,7 +5,7 @@ export type DrawerItem = {
   path: string;
 };
 
-const drawerItems = [
+const drawerItems: DrawerItem[] = [
   { name: 'Dashboard', path: '/app/dashboard' },
   { name: 'Sas', path: '/app/sas' },
   { name: 'Automations', path: '/app/automations' },
@@ -17,7 +17,7 @@ const initialState = {
   items: drawerItems,
 };
 
-const drawerSlice = createSlice({
+const drawer = createSlice({
   name: 'drawer',
   initialState,
   reducers: {
@@ -27,5 +27,5 @@ const drawerSlice = createSlice({
   },
 });
 
-export const { selectDrawerItem } = drawerSlice.actions;
-export default drawerSlice.reducer;
+export const { selectDrawerItem } = drawer.actions;
+export default drawer.reducer;

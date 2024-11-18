@@ -2,8 +2,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { automationApi } from './services/automation';
 import { runnerApi } from './services/runner';
-import appReducer from './slices/appSlice';
+import appReducer from './slices/app/appReducer';
 import { sasApi } from '@/services/sas';
+import { Middleware } from 'redux';
+
+const loggerMiddleware: Middleware = (storeAPI) => (next) => (action) => {
+  console.log('Dispatching action:', action);
+  const result = next(action);
+  console.log('Updated state:', storeAPI.getState());
+  return result;
+};
 
 export const store = configureStore({
   reducer: {
@@ -18,7 +26,8 @@ export const store = configureStore({
     })
       .concat(automationApi.middleware)
       .concat(runnerApi.middleware)
-      .concat(sasApi.middleware),
+      .concat(sasApi.middleware)
+      .concat(loggerMiddleware),
 });
 
 setupListeners(store.dispatch);

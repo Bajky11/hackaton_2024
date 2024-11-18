@@ -4,8 +4,13 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/slices/app/parts/auth';
+import { useRouter } from 'next/navigation';
 
 function UserMenu() {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -14,6 +19,11 @@ function UserMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(setUser(null));
+    router.push('/');
   };
 
   return (
@@ -39,7 +49,7 @@ function UserMenu() {
             <Typography>Settings</Typography>
           </Stack>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleLogout()}>
           <Stack direction={'row'} gap={1}>
             <LogoutOutlinedIcon />
             <Typography>Logout</Typography>

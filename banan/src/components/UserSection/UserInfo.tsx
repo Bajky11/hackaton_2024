@@ -4,6 +4,7 @@ import { User } from '@/slices/app/parts/auth';
 function UserInfo({ user }: { user: User | null }) {
   return (
     <Stack direction={'row'} gap={1} alignItems={'center'}>
+      <Avatar />
       <Stack>
         <Typography
           sx={{ textTransform: 'uppercase' }}
@@ -14,7 +15,6 @@ function UserInfo({ user }: { user: User | null }) {
         </Typography>
         <Typography fontSize={12}>Admin</Typography>
       </Stack>
-      <Avatar />
     </Stack>
   );
 }

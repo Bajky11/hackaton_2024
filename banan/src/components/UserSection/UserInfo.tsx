@@ -1,6 +1,7 @@
 import { Avatar, Stack, Typography } from '@mui/material';
+import { User } from '@/slices/app/parts/auth';
 
-function UserInfo() {
+function UserInfo({ user }: { user: User | null }) {
   return (
     <Stack direction={'row'} gap={1} alignItems={'center'}>
       <Stack>
@@ -9,7 +10,7 @@ function UserInfo() {
           fontWeight={'bold'}
           fontSize={18}
         >
-          LARRY
+          {user ? user.name : 'Hackaton'}
         </Typography>
         <Typography fontSize={12}>Admin</Typography>
       </Stack>

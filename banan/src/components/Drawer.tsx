@@ -4,7 +4,7 @@ import { Divider, Paper, Stack, Typography } from '@mui/material';
 import { drawer_width } from '@/constants';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { DrawerItem, selectDrawerItem } from '@/slices/drawerSlice';
+import { DrawerItem, selectDrawerItem } from '@/slices/app/parts/drawer';
 import { RootState } from '@/store';
 import { Box } from '@mui/system';
 
@@ -28,9 +28,10 @@ const Drawer = () => {
     >
       <Box>LOGO</Box>
       <Divider orientation={'horizontal'} color={'white'} />
-      {drawerItems.map((item: DrawerItem) => {
+      {drawerItems.map((item: DrawerItem, id: number) => {
         return (
           <Paper
+            key={id}
             component={Link}
             href={item.path}
             elevation={3}

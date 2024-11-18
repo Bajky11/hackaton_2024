@@ -7,7 +7,6 @@ export default function Page() {
 
   return (
     <div>
-      <h3>Jeden sas</h3>
       <p>Sas id: {id}</p>
     </div>
   );

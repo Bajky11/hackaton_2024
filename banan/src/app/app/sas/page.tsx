@@ -13,14 +13,20 @@ function SASList() {
   return (
     <Stack spacing={2} p={2}>
       {sasList.map((sas: string, id: number) => (
-        <Link key={sas} href={`/app/sas/${sas}`} passHref>
-          <Paper key={id} elevation={3} sx={{ p: 2 }}>
+        <Paper
+          key={id}
+          elevation={3}
+          component={Link}
+          href={`/app/sas/${sas}`}
+          sx={{ textDecoration: 'none' }}
+        >
+          <Stack p={2}>
             <Typography variant="h6" fontWeight="bold">
               {sas}
             </Typography>
             <Typography>description</Typography>
-          </Paper>
-        </Link>
+          </Stack>
+        </Paper>
       ))}
     </Stack>
   );

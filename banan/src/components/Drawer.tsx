@@ -30,19 +30,22 @@ const Drawer = () => {
       <Divider orientation={'horizontal'} color={'white'} />
       {drawerItems.map((item: DrawerItem) => {
         return (
-          <Link key={item.name} href={item.path} passHref>
-            <Paper
-              elevation={3}
-              onClick={() => handleItemClick(item)}
-              sx={{
-                p: 1,
-                backgroundColor:
-                  selectedItem === item.name ? '#2C5DDA' : '#313030',
-              }}
-            >
-              <Typography color={'white'}>{item.name}</Typography>
-            </Paper>
-          </Link>
+          <Paper
+            component={Link}
+            href={item.path}
+            elevation={3}
+            onClick={() => handleItemClick(item)}
+            sx={{
+              p: 1,
+              backgroundColor:
+                selectedItem === item.name ? '#2C5DDA' : '#313030',
+              textDecoration: 'none',
+            }}
+          >
+            <Typography color={'white'} sx={{ textTransform: 'upperCase' }}>
+              {item.name}
+            </Typography>
+          </Paper>
         );
       })}
     </Stack>

@@ -5,11 +5,11 @@ export type DrawerItem = {
   path: string;
 };
 
-const drawerItems = [
-  { name: 'Dashboard', path: '/dashboard' },
-  { name: 'Sas', path: '/sas' },
-  { name: 'Automations', path: '/automations' },
-  { name: 'Metrics', path: '/metrics' },
+const drawerItems: DrawerItem[] = [
+  { name: 'Dashboard', path: '/app/dashboard' },
+  { name: 'Sas', path: '/app/sas' },
+  { name: 'Automations', path: '/app/automations' },
+  { name: 'Metrics', path: '/app/metrics' },
 ];
 
 const initialState = {
@@ -17,7 +17,7 @@ const initialState = {
   items: drawerItems,
 };
 
-const drawerSlice = createSlice({
+const drawer = createSlice({
   name: 'drawer',
   initialState,
   reducers: {
@@ -27,5 +27,5 @@ const drawerSlice = createSlice({
   },
 });
 
-export const { selectDrawerItem } = drawerSlice.actions;
-export default drawerSlice.reducer;
+export const { selectDrawerItem } = drawer.actions;
+export default drawer.reducer;

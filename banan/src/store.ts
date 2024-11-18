@@ -1,35 +1,34 @@
-// store.js
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import { automationApi } from './services/automation';
 import { runnerApi } from './services/runner';
-import appReducer from './slices/appSlice';
+import appReducer from './slices/app/appReducer';
+import { sasApi } from '@/services/sas';
+import { Middleware } from 'redux';
 
-// Konfigurace pro `redux-persist`
-const persistConfig = {
-  key: 'root',
-  storage,
+const loggerMiddleware: Middleware = (storeAPI) => (next) => (action) => {
+  console.log('Dispatching action:', action);
+  const result = next(action);
+  console.log('Updated state:', storeAPI.getState());
+  return result;
 };
-
-const persistedReducer = persistReducer(persistConfig, appReducer);
 
 export const store = configureStore({
   reducer: {
     [automationApi.reducerPath]: automationApi.reducer,
     [runnerApi.reducerPath]: runnerApi.reducer,
-    app: persistedReducer,
+    [sasApi.reducerPath]: sasApi.reducer,
+    app: appReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     })
       .concat(automationApi.middleware)
-      .concat(runnerApi.middleware),
+      .concat(runnerApi.middleware)
+      .concat(sasApi.middleware)
+      .concat(loggerMiddleware),
 });
-
-export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
 

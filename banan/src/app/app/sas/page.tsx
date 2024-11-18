@@ -11,7 +11,7 @@ function SASList() {
   if (error) return <Typography>Chyba při načítání dat</Typography>;
 
   return (
-    <Stack spacing={2} p={2}>
+    <Stack spacing={2}>
       {sasList.map((sas: string, id: number) => (
         <Paper
           key={id}

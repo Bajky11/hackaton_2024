@@ -9,16 +9,12 @@ const Header = () => {
     <Stack
       direction={'row'}
       justifyContent={'space-between'}
+      alignItems={'flex-start'}
       height={header_height}
-      p={1}
     >
       <Stack direction={'row'} alignItems={'center'} gap={1}>
         <SortIcon />
-        <Typography
-          sx={{ textTransform: 'uppercase' }}
-          fontWeight={'bold'}
-          fontSize={20}
-        >
+        <Typography sx={{ textTransform: 'uppercase' }} variant={'h6'}>
           TITLE
         </Typography>
       </Stack>

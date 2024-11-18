@@ -2,12 +2,12 @@ import { Avatar, Stack, Typography } from '@mui/material';
 
 function UserInfo() {
   return (
-    <Stack direction={'row'} spacing={1}>
+    <Stack direction={'row'} gap={1} alignItems={'center'}>
       <Stack>
         <Typography
           sx={{ textTransform: 'uppercase' }}
           fontWeight={'bold'}
-          fontSize={20}
+          fontSize={18}
         >
           LARRY
         </Typography>

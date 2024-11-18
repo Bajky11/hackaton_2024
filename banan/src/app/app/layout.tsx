@@ -16,11 +16,16 @@ function AppLayout({
       <body>
         <Stack direction={'row'} sx={{ height: '100vh' }}>
           <Drawer />
-          <Stack direction={'column'} flex={1}>
-            <Header />
+          <Stack direction={'column'} flex={1} p={1} gap={1}>
+            {/* Padding for whole page next to Drawer */}
+            <Box px={1}>
+              {/* Pading for Header, centralized here to match content at the
+              bottom {children} */}
+              <Header />
+            </Box>
             <Box
-              p={1}
               sx={{
+                p: 1, // Padding to see whole Card displayed
                 flex: 1,
                 overflowY: 'auto',
                 height: `calc(100vh - ${header_height}px)`,

@@ -26,8 +26,8 @@ export const store = configureStore({
     })
       .concat(automationApi.middleware)
       .concat(runnerApi.middleware)
-      .concat(sasApi.middleware)
-      .concat(loggerMiddleware),
+      .concat(sasApi.middleware),
+  //.concat(loggerMiddleware),
 });
 
 setupListeners(store.dispatch);

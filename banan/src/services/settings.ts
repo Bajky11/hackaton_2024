@@ -42,7 +42,7 @@ interface QueryFilter {
 export enum Order {
   ASC = 'asc',
   DESC = 'desc',
-};
+}
 
 export type UrlParams = {
   /**
@@ -90,7 +90,7 @@ export type UrlParams = {
    * `query` is an array of filters for more complex queries.
    * Each filter contains `property`, `operator`, and `value`.
    * You can use operators like 'eq', 'ne', 'gt', 'lt', etc.
-   * @example 
+   * @example
    * [
    *   { property: 'status', operator: 'eq', value: 'active' },
    *   { property: 'name', operator: 'like', value: 'automation' }
@@ -106,9 +106,9 @@ export const urlParamsBuilder = ({
   sort,
   order,
   search,
-  query }: UrlParams
-): string => {
-  let url = base ?? "";
+  query,
+}: UrlParams): string => {
+  let url = base ?? '';
   const params = new URLSearchParams();
 
   if (page !== undefined) params.append('page', page.toString());

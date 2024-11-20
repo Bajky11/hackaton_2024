@@ -18,6 +18,7 @@ import {
   Chip,
   Pagination,
 } from '@mui/material';
+import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
 import { useRouter } from 'next/navigation';
 import { getStateColor } from '@/services/automation';
 
@@ -39,23 +40,30 @@ const Automations: React.FC = () => {
 
   // Načti data z API s ohledem na stránkování
   const { data: automationList } = useGetAutomationListQuery({ page, limit });
-  const { data: automationTypeData } = useGetAutomationTypeListQuery({ limit: 100 });
+  const { data: automationTypeData } = useGetAutomationTypeListQuery({
+    limit: 100,
+  });
 
   useEffect(() => {
     if (automationList) {
-      console.log("automationList:", automationList);
+      console.log('automationList:', automationList);
       setOriginalData(automationList.items); // Ulož data (předpokládáme, že data jsou v `items`)
       setFilteredData(automationList.items); // Inicializuj filtrovaná data
+      console.log(automationList.total);
       setTotalPages(Math.ceil(automationList.total / limit)); // Nastav celkový počet stránek
     }
   }, [automationList]);
 
   useEffect(() => {
     if (automationTypeData) {
-      const types = Array.from(new Set(automationTypeData.map((type) => type.type)));
+      const types = Array.from(
+        new Set(automationTypeData.map((type) => type.type)),
+      );
       setAutomationTypes(types);
 
-      const states = Array.from(new Set(automationTypeData.flatMap((type) => type.states)));
+      const states = Array.from(
+        new Set(automationTypeData.flatMap((type) => type.states)),
+      );
       setAutomationStates(states);
     }
   }, [automationTypeData]);
@@ -70,7 +78,7 @@ const Automations: React.FC = () => {
       data = data.filter(
         (automation) =>
           automation.id.toLowerCase().includes(lowerCaseSearchTerm) ||
-          automation.type.toLowerCase().includes(lowerCaseSearchTerm)
+          automation.type.toLowerCase().includes(lowerCaseSearchTerm),
       );
     }
 
@@ -87,15 +95,20 @@ const Automations: React.FC = () => {
     // Řazení dat
     data.sort((a, b) =>
       sortOrder === 'asc'
-        ? new Date(a.last_activity).getTime() - new Date(b.last_activity).getTime()
-        : new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime()
+        ? new Date(a.last_activity).getTime() -
+          new Date(b.last_activity).getTime()
+        : new Date(b.last_activity).getTime() -
+          new Date(a.last_activity).getTime(),
     );
 
     setFilteredData(data); // Aktualizuj filtrovaná data
   }, [searchTerm, filterType, filterState, sortOrder, originalData]);
 
   // Funkce pro změnu stránky
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
     setPage(value);
   };
 
@@ -159,32 +172,30 @@ const Automations: React.FC = () => {
               borderStyle: 'solid',
             }}
           >
-            <CardContent>
+            <CardContent
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: '10px',
+              }}
+            >
               <Typography variant="h6">{automation.id}</Typography>
-              <Typography variant="body2" color="textSecondary">
-                Typ: {automation.type}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Poslední Aktivita: {new Date(automation.last_activity).toLocaleString()}
-              </Typography>
               <Chip
                 label={automation.state}
                 variant="filled"
                 sx={{
                   backgroundColor: getStateColor(automation.state),
                   color: '#fff',
-                  marginTop: 1,
                 }}
               />
-            </CardContent>
-            <CardActions>
               <Button
                 size="small"
                 onClick={() => router.push(`automations/${automation.id}`)}
               >
-                Detaily
+                <HelpOutlinedIcon />
               </Button>
-            </CardActions>
+            </CardContent>
           </Card>
         ))}
       </Stack>

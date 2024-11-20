@@ -50,13 +50,19 @@ export const automationApi = createApi({
   reducerPath: 'automationApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getAutomationList: builder.query<{ items: Automation[]; total: number }, Partial<UrlParams>>({
+    getAutomationList: builder.query<
+      { items: Automation[]; total: number },
+      Partial<UrlParams>
+    >({
       query: (params: UrlParams = {}) => ({
         url: urlParamsBuilder({ base: 'automations', ...params }),
       }),
       transformResponse: (response: Automation[], meta) => {
         // Získání `X-Total-Count` z hlaviček
-        const total = parseInt(meta?.response?.headers.get('X-Total-Count') || '0', 10);
+        const total = parseInt(
+          meta?.response?.headers.get('X-Total-Count') || '0',
+          10,
+        );
         return { items: response, total };
       },
     }),

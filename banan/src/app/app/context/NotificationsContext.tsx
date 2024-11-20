@@ -1,0 +1,70 @@
+'use client';
+
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import { useGetFailedAutomationListQuery } from '@/services/automation';
+import { v4 as uuidv4 } from 'uuid';
+
+type Notification = {
+  id: string;
+  message: string;
+};
+
+type NotificationsContextType = {
+  notifications: Notification[];
+  clearNotifications: () => void;
+  removeNotification: (id: string) => void;
+};
+
+const NotificationsContext = createContext<NotificationsContextType>({
+  notifications: [],
+  clearNotifications: () => {},
+  removeNotification: () => {},
+});
+
+type NotificationsProviderProps = {
+  children: ReactNode;
+};
+
+export const NotificationsProvider: React.FC<NotificationsProviderProps> = ({
+  children,
+}) => {
+  const { data: failedAutomations, isLoading } =
+    useGetFailedAutomationListQuery();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    if (!isLoading && failedAutomations) {
+      const newNotifications = failedAutomations.map((automation) => ({
+        id: uuidv4(),
+        message: `Automatizace ${automation.id} skončila errorem.`,
+      }));
+      setNotifications(newNotifications);
+    }
+  }, [failedAutomations, isLoading]);
+
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id),
+    );
+  };
+
+  return (
+    <NotificationsContext.Provider
+      value={{ notifications, clearNotifications, removeNotification }}
+    >
+      {children}
+    </NotificationsContext.Provider>
+  );
+};
+
+export const useNotifications = () => useContext(NotificationsContext);

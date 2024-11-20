@@ -9,6 +9,7 @@ const drawerItems: DrawerItem[] = [
   { name: 'Dashboard', path: '/app/dashboard' },
   { name: 'Sas', path: '/app/sas' },
   { name: 'Automations', path: '/app/automations' },
+  { name: 'Runners', path: '/app/runners' },
   { name: 'Metrics', path: '/app/metrics' },
 ];
 

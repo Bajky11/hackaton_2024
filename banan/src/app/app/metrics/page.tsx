@@ -88,8 +88,6 @@ export default function Metrics() {
   const fsWritesSeries = data.map((item) => item.fs_writes);
 
   // Výpočty pro procentuální využití
-  const cpuUtilization = data.map((item) => (item.cpu * 100) / maxCpu);
-  const memoryUtilization = data.map((item) => (item.memory / maxMemory) * 100);
   const networkReceiveUtilization = data.map(
     (item) => (item.network_receive / maxNetwork) * 100,
   );
@@ -103,11 +101,28 @@ export default function Metrics() {
     (item) => (item.fs_writes / maxFsWrites) * 100,
   );
 
+  // Výpočty pro procentuální využití
+  const cpuUtilization = data.map((item) => (item.cpu * 100) / maxCpu);
+  const memoryUtilization = data.map((item) => (item.memory / maxMemory) * 100);
+  const networkUtilization = data.map(
+    (item) =>
+      ((item.network_receive + item.network_transmit) / (2 * maxNetwork)) * 100,
+  );
+  const fsUtilization = data.map(
+    (item) =>
+      ((item.fs_reads / maxFsReads + item.fs_writes / maxFsWrites) / 2) * 100,
+  );
+  // Použití posledního záznamu z dat
+
+  const lastCpuValue = data[data.length - 1].cpu * 100; // Převod na procenta
+  const utilizedCpu = (lastCpuValue / maxCpu) * 100;
+  const freeCpu = 100 - utilizedCpu;
+
   return (
     <Stack gap={1}>
       <Stack gap={2}>
-        {/* Graf pro využití CPU */}
         <Stack component={Paper} p={1} width={600} height={300}>
+          Vyvoj vyuziti pameti
           <HighchartsReact
             highcharts={Highcharts}
             options={{
@@ -115,7 +130,95 @@ export default function Metrics() {
                 type: 'area',
               },
               title: {
-                text: 'Využití CPU',
+                text: '',
+              },
+              xAxis: {
+                labels: {
+                  enabled: false, // Skryje popisky na ose X
+                },
+                tickLength: 0, // Skryje značky na ose X
+              },
+              yAxis: {
+                title: {
+                  text: 'Paměť (MB)',
+                },
+              },
+              plotOptions: {
+                area: {
+                  marker: {
+                    enabled: false, // Skryje značky bodů
+                  },
+                },
+              },
+              series: [
+                {
+                  name: 'Využití Paměti',
+                  data: memorySeries,
+                },
+              ],
+            }}
+          />
+        </Stack>
+
+        <Stack component={Paper} p={1} width={600} height={300}>
+          Vyuziti CPU
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              chart: {
+                type: 'pie',
+              },
+              title: {
+                text: '',
+              },
+              plotOptions: {
+                pie: {
+                  innerSize: '60%', // Donut efekt
+                  dataLabels: {
+                    enabled: true,
+                    distance: 30, // Vzdálenost popisků od grafu
+                    format: '{point.name}: {point.y:.1f}%',
+                    style: {
+                      color: '#000000', // Barva textu popisků
+                    },
+                  },
+                },
+              },
+              series: [
+                {
+                  name: 'CPU Využití',
+                  data: [
+                    { name: 'Využito', y: utilizedCpu, color: 'red' }, // Oranžová barva
+                    { name: 'Volné', y: freeCpu, color: 'lightgray' }, // Zelená barva
+                  ],
+                },
+              ],
+              // Přidání textu doprostřed grafu
+              subtitle: {
+                text: `${utilizedCpu.toFixed(1)}%`,
+                align: 'center',
+                verticalAlign: 'middle',
+                style: {
+                  fontSize: '32px',
+                  fontWeight: 'bold',
+                  color: 'black',
+                },
+              },
+            }}
+          />
+        </Stack>
+
+        {/* Graf pro využití CPU */}
+        <Stack component={Paper} p={1} width={600} height={300}>
+          vyvoj vyuziti cpu
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              chart: {
+                type: 'area',
+              },
+              title: {
+                text: '',
               },
               xAxis: {
                 labels: {
@@ -214,7 +317,7 @@ export default function Metrics() {
                 type: 'area',
               },
               title: {
-                text: 'Síťový Přenos - Odesláno',
+                text: '',
               },
               xAxis: {
                 labels: {
@@ -229,7 +332,7 @@ export default function Metrics() {
               },
               series: [
                 {
-                  name: `Odesláno (${networkTransmitUtilization[networkTransmitUtilization.length - 1]}%)`,
+                  name: 'Odesláno',
                   data: networkTransmitUtilization,
                 },
               ],

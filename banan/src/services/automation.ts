@@ -34,13 +34,30 @@ export type Transition = {
   action: string;
 };
 
+export const stateColors: { [key: string]: string } = {
+  FINISHED: '#4CAF50', // Green
+  RETRY_CHOICE: '#FF9800', // Orange
+  FAILED: '#F44336', // Red
+  DEFAULT: '#1976D2', // Blue for other states
+};
+
+// Funkce pro získání barvy podle stavu
+export const getStateColor = (state: string): string => {
+  return stateColors[state] || stateColors.DEFAULT;
+};
+
 export const automationApi = createApi({
   reducerPath: 'automationApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getAutomationList: builder.query<Automation[], void | Partial<UrlParams>>({
-      query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'automations', ...params });
+    getAutomationList: builder.query<{ items: Automation[]; total: number }, Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => ({
+        url: urlParamsBuilder({ base: 'automations', ...params }),
+      }),
+      transformResponse: (response: Automation[], meta) => {
+        // Získání `X-Total-Count` z hlaviček
+        const total = parseInt(meta?.response?.headers.get('X-Total-Count') || '0', 10);
+        return { items: response, total };
       },
     }),
     getAutomationDetail: builder.query<Automation, string>({
@@ -49,10 +66,10 @@ export const automationApi = createApi({
     getAutomationDetailLogs: builder.query<AutomationLog[], string>({
       query: (id) => `automations/${id}/logs`,
     }),
-    getAutomationTypeList: builder.query<AutomationType[], void | Partial<UrlParams>>({
-      query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'automation-types', ...params });
-      },
+    getAutomationTypeList: builder.query<AutomationType[], Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => ({
+        url: urlParamsBuilder({ base: 'automation-types', ...params }),
+      }),
     }),
     getAutomationTypeDetail: builder.query<AutomationType, string>({
       query: (type) => `automation-types/${type}`,

@@ -1,4 +1,4 @@
-import Automations from '@/components/Automations';
+import Automations from '@/components/automations/Automations';
 
 export default function Page() {
   return (

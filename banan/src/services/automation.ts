@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
+import { type } from 'os';
 
 export type Automation = {
   id: string;
@@ -38,9 +39,15 @@ export const automationApi = createApi({
   reducerPath: 'automationApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getAutomationList: builder.query<Automation[], void | Partial<UrlParams>>({
-      query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'automations', ...params });
+    getAutomationList: builder.query<{ items: Automation[]; total: number }, Partial<UrlParams> | void>({
+      query: (params: UrlParams = {}) => ({
+        url: urlParamsBuilder({ base: 'automations', ...params }),
+      }),
+      transformResponse: (response: Automation[], meta) => {
+
+        // Získání konkrétní hlavičky
+        const total = meta?.response?.headers.get('x-total-count');
+        return { items: response, total: Number(total) };
       },
     }),
     getAutomationDetail: builder.query<Automation, string>({

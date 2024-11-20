@@ -7,10 +7,19 @@ import {
   Chip,
 } from '@mui/material';
 import { QueryOperator } from '@/services/settings';
-import { DataGrid, GridColDef, GridFilterModel, GridSortModel } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridFilterModel, GridSortModel, GridPaginationModel } from '@mui/x-data-grid';
 
 const Automations = () => {
-  const [queryOptions, setQueryOptions] = React.useState({});
+  const [paginationModel, setPaginationModel] = React.useState<GridPaginationModel>({
+    page: 0, // DataGrid uses 0-based index for pages
+    pageSize: 10, // Default page size
+  });
+
+  const [queryOptions, setQueryOptions] = React.useState({
+    page: paginationModel.page,
+    limit: paginationModel.pageSize,
+  });
+
   const { data, error, isLoading } = useGetAutomationListQuery(queryOptions);
 
   // Mappings for DataGrid operators to QueryOperator
@@ -67,6 +76,17 @@ const Automations = () => {
     }
   }, []);
 
+  // Handle pagination model change
+  const onPaginationModelChange = useCallback((newPaginationModel: GridPaginationModel) => {
+    setPaginationModel(newPaginationModel);
+
+    setQueryOptions((prev) => ({
+      ...prev,
+      page: newPaginationModel.page,
+      limit: newPaginationModel.pageSize,
+    }));
+  }, []);
+
   const dayjs = require('dayjs');
 
 
@@ -117,7 +137,13 @@ const Automations = () => {
         onSortModelChange={onSortModelChange}
         filterMode='server'
         sortingMode='server'
+        paginationMode="server"
+        // TODO: get data.total from API header
+        rowCount={52}
         loading={isLoading}
+        pagination
+        paginationModel={paginationModel}
+        onPaginationModelChange={onPaginationModelChange}
       />
     </Box>
   );

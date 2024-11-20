@@ -2,192 +2,240 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    useGetAutomationListQuery,
-    useGetAutomationTypeListQuery,
-    useGetAutomationDetailLogsQuery,
+  useGetAutomationListQuery,
+  useGetAutomationTypeListQuery,
 } from '@/services/automation';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { Paper, Stack, Typography, Grid, useMediaQuery } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  Grid,
+  CircularProgress,
+  Stack,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 const AutomationStatistics: React.FC = () => {
-    const { data: automationList, isLoading: loadingAutomations } = useGetAutomationListQuery({ limit: 100 });
-    const { data: automationTypeData, isLoading: loadingTypes } = useGetAutomationTypeListQuery({ limit: 100 });
-    const [stateCounts, setStateCounts] = useState<{ [key: string]: number }>({});
-    const [typeCounts, setTypeCounts] = useState<{ [key: string]: number }>({});
-    const [activityDistribution, setActivityDistribution] = useState<{ [key: string]: number }>({});
-    const [successRate, setSuccessRate] = useState<{ success: number; failure: number }>({ success: 0, failure: 0 });
-    const [dailyAutomations, setDailyAutomations] = useState<{ [key: string]: number }>({});
+  const { data: automationList, isLoading: loadingAutomations } =
+    useGetAutomationListQuery({ limit: 100 });
+  const { data: automationTypeData, isLoading: loadingTypes } =
+    useGetAutomationTypeListQuery({ limit: 100 });
 
-    const theme = useTheme();
-    const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const [stateCounts, setStateCounts] = useState<{ [key: string]: number }>({});
+  const [typeCounts, setTypeCounts] = useState<{ [key: string]: number }>({});
+  const [successRate, setSuccessRate] = useState<{
+    success: number;
+    failure: number;
+  }>({ success: 0, failure: 0 });
 
-    useEffect(() => {
-        if (automationList) {
-            // Počet automatizací v jednotlivých stavech
-            var stateCounter: { [key: string]: number } = {};
-            automationList.items.forEach((automation) => {
-                stateCounter[automation.state] = (stateCounter[automation.state] || 0) + 1;
-            });
-            setStateCounts(stateCounter);
+  const theme = useTheme();
 
-            // Počet automatizací podle typu
-            const typeCounter: { [key: string]: number } = {};
-            automationList.items.forEach((automation) => {
-                typeCounter[automation.type] = (typeCounter[automation.type] || 0) + 1;
-            });
-            setTypeCounts(typeCounter);
+  useEffect(() => {
+    if (automationList) {
+      const stateCounter: { [key: string]: number } = {};
+      const typeCounter: { [key: string]: number } = {};
+      let successCount = 0;
+      let failureCount = 0;
 
-            // Distribuce automatizací podle poslední aktivity
-            const activityCounter: { [key: string]: number } = {};
-            automationList.items.forEach((automation) => {
-                const date = new Date(automation.last_activity).toLocaleDateString();
-                activityCounter[date] = (activityCounter[date] || 0) + 1;
-            });
-            setActivityDistribution(activityCounter);
+      automationList.items.forEach((automation) => {
+        // Počet podle stavu
+        stateCounter[automation.state] =
+          (stateCounter[automation.state] || 0) + 1;
 
-            // Úspěšnost automatizací (poměr úspěšných/neúspěšných)
-            let successCount = 0;
-            let failureCount = 0;
-            automationList.items.forEach((automation) => {
-                if (automation.state === 'FINISHED') {
-                    successCount++;
-                } else if (automation.state === 'FAILED') {
-                    failureCount++;
-                }
-            });
-            setSuccessRate({ success: successCount, failure: failureCount });
+        // Počet podle typu
+        typeCounter[automation.type] = (typeCounter[automation.type] || 0) + 1;
 
-            // Distribuce automatizací podle dnů v týdnu
-            const dailyCounter: { [key: string]: number } = {};
-            automationList.items.forEach((automation) => {
-                const day = new Date(automation.last_activity).toLocaleString('cs-CZ', { weekday: 'long' });
-                dailyCounter[day] = (dailyCounter[day] || 0) + 1;
-            });
-            setDailyAutomations(dailyCounter);
+        // Úspěšnost
+        if (automation.state === 'FINISHED') {
+          successCount++;
+        } else if (automation.state === 'FAILED') {
+          failureCount++;
         }
+      });
 
-    }, [automationList, automationTypeData]);
+      setStateCounts(stateCounter);
+      setTypeCounts(typeCounter);
+      setSuccessRate({ success: successCount, failure: failureCount });
+    }
+  }, [automationList]);
 
-    if (loadingAutomations || loadingTypes) return <div>Načítání...</div>;
-
+  if (loadingAutomations || loadingTypes) {
     return (
-        <Grid container spacing={2}>
-            {/* Počet automatizací podle stavu */}
-            <Grid item xs={12} md={6}>
-                <Stack component={Paper} p={2} elevation={6} square={false} sx={{ backgroundColor: '#2C5DDA' }}>
-                    <HighchartsReact
-                        backgroundColor={'#2C5DDA'}
-                        highcharts={Highcharts}
-                        options={{
-                            chart: { type: 'pie' },
-                            title: { text: 'Automatizace podle stavu' },
-                            series: [
-                                {
-                                    name: 'Počet',
-                                    data: Object.entries(stateCounts).map(([state, count]) => ({
-                                        name: state,
-                                        y: count,
-                                    })),
-                                },
-                            ],
-                        }}
-                    />
-                </Stack>
-            </Grid>
-
-            {/* Počet automatizací podle typu */}
-            <Grid item xs={12} md={6}>
-                <Stack component={Paper} p={2}>
-                    <Typography variant="h6">Počet Automatizací podle Typu</Typography>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={{
-                            chart: { type: 'column' },
-                            title: { text: 'Automatizace podle typu' },
-                            xAxis: { categories: Object.keys(typeCounts) },
-                            yAxis: { title: { text: 'Počet' } },
-                            series: [
-                                {
-                                    name: 'Počet',
-                                    data: Object.values(typeCounts),
-                                },
-                            ],
-                        }}
-                    />
-                </Stack>
-            </Grid>
-
-            {/* Distribuce automatizací podle poslední aktivity */}
-            <Grid item xs={12} md={6}>
-                <Stack component={Paper} p={2}>
-                    <Typography variant="h6">Distribuce Automatizací Podle Poslední Aktivity</Typography>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={{
-                            chart: { type: 'line' },
-                            title: { text: 'Automatizace podle poslední aktivity' },
-                            xAxis: { categories: Object.keys(activityDistribution) },
-                            yAxis: { title: { text: 'Počet' } },
-                            series: [
-                                {
-                                    name: 'Počet',
-                                    data: Object.values(activityDistribution),
-                                },
-                            ],
-                        }}
-                    />
-                </Stack>
-            </Grid>
-
-            {/* Úspěšnost Automatizací */}
-            <Grid item xs={12} md={6}>
-                <Stack component={Paper} p={2}>
-                    <Typography variant="h6">Úspěšnost Automatizací</Typography>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={{
-                            chart: { type: 'pie' },
-                            title: { text: 'Úspěšnost automatizací' },
-                            series: [
-                                {
-                                    name: 'Počet',
-                                    data: [
-                                        { name: 'Úspěšné', y: successRate.success },
-                                        { name: 'Neúspěšné', y: successRate.failure },
-                                    ],
-                                },
-                            ],
-                        }}
-                    />
-                </Stack>
-            </Grid>
-
-            {/* Distribuce Automatizací podle Dnů v Týdnu */}
-            <Grid item xs={12} md={6}>
-                <Stack component={Paper} p={2}>
-                    <Typography variant="h6">Distribuce Automatizací podle Dnů v Týdnu</Typography>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={{
-                            chart: { type: 'column' },
-                            title: { text: 'Automatizace podle dnů v týdnu' },
-                            xAxis: { categories: Object.keys(dailyAutomations) },
-                            yAxis: { title: { text: 'Počet' } },
-                            series: [
-                                {
-                                    name: 'Počet',
-                                    data: Object.values(dailyAutomations),
-                                },
-                            ],
-                        }}
-                    />
-                </Stack>
-            </Grid>
-        </Grid>
+      <Stack
+        sx={{
+          height: '100vh',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Stack>
     );
+  }
+
+  const charts = [
+    {
+      title: 'Automatizace podle stavu',
+      options: {
+        chart: { type: 'column', height: 200 },
+        title: { text: null },
+        xAxis: {
+          categories: Object.keys(stateCounts),
+          labels: { enabled: false },
+        },
+        yAxis: { title: { text: 'Počet' } },
+        tooltip: {
+          pointFormat: '<b>{point.category}</b>: {point.y} automatizací',
+        },
+        plotOptions: {
+          column: {
+            dataLabels: {
+              enabled: false, // Skryje popisy sloupců
+            },
+          },
+        },
+        series: [
+          {
+            name: 'Počet',
+            data: Object.entries(stateCounts).map(([state, count]) => ({
+              name: state,
+              y: count,
+              color:
+                Highcharts.getOptions().colors![Math.floor(Math.random() * 10)],
+            })),
+          },
+        ],
+      },
+    },
+    {
+      title: 'Automatizace podle typu',
+      options: {
+        chart: { type: 'column', height: 200 },
+        title: { text: null },
+        xAxis: {
+          categories: Object.keys(typeCounts),
+          labels: { enabled: false },
+        },
+        yAxis: { title: { text: 'Počet' } },
+        tooltip: {
+          pointFormat: '<b>{point.category}</b>: {point.y} automatizací',
+        },
+        plotOptions: {
+          column: {
+            dataLabels: {
+              enabled: false, // Skryje popisy sloupců
+            },
+          },
+        },
+        series: [
+          {
+            name: 'Počet',
+            data: Object.entries(typeCounts).map(([type, count]) => ({
+              name: type,
+              y: count,
+              color:
+                Highcharts.getOptions().colors![Math.floor(Math.random() * 10)],
+            })),
+          },
+        ],
+      },
+    },
+    {
+      title: 'Úspěšnost automatizací',
+      options: {
+        chart: { type: 'pie', height: 200 },
+        title: { text: null },
+        tooltip: {
+          pointFormat: '<b>{point.name}</b>: {point.y} automatizací',
+        },
+        plotOptions: {
+          pie: {
+            dataLabels: {
+              enabled: false, // Skryje popisy výsečí
+            },
+          },
+        },
+        series: [
+          {
+            name: 'Počet',
+            data: [
+              { name: 'Úspěšné', y: successRate.success, color: '#4caf50' },
+              { name: 'Neúspěšné', y: successRate.failure, color: '#f44336' },
+            ],
+          },
+        ],
+      },
+    },
+  ];
+
+  return (
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}
+    >
+      {/* Nadpis nad všemi grafy */}
+      <Grid item xs={12}>
+        <Typography
+          variant="h5"
+          sx={{
+            textAlign: 'center',
+            fontWeight: 'bold',
+            mb: 3, // Odsazení pod nadpisem
+          }}
+        >
+          Statistika Automatizací
+        </Typography>
+      </Grid>
+
+      {/* Mapování jednotlivých grafů */}
+      {charts.map((chart, index) => (
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          key={index}
+          sx={{
+            flexBasis: '33%',
+            flexGrow: 1,
+            maxWidth: { xs: '100%', sm: '50%', md: '33%' },
+          }}
+        >
+          <Paper elevation={3} sx={{ p: 2, height: 250 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: '0.9rem',
+                fontWeight: 500,
+                color: theme.palette.text.secondary,
+                textTransform: 'uppercase',
+                mb: 2,
+                textAlign: 'center',
+              }}
+            >
+              {chart.title}
+            </Typography>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={chart.options}
+              containerProps={{
+                style: {
+                  height: '100%',
+                  width: '100%',
+                },
+              }}
+            />
+          </Paper>
+        </Grid>
+      ))}
+    </Grid>
+  );
 };
 
 export default AutomationStatistics;
-

@@ -15,6 +15,7 @@ import {
   GridPaginationModel,
 } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 const Automations = () => {
   const router = useRouter();
@@ -130,6 +131,12 @@ const Automations = () => {
       sortable: true,
     },
     {
+      field: 'sas',
+      headerName: 'SAS',
+      width: 150,
+      sortable: true,
+    },
+    {
       field: 'state',
       headerName: 'State',
       width: 400,
@@ -154,15 +161,14 @@ const Automations = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 150,
+      width: 100,
       sortable: false,
       renderCell: (params) => (
         <Button
           size="small"
-          variant="contained"
           onClick={() => router.push(`automations/${params.row.id}`)}
         >
-          Detail
+          <HelpOutlineOutlinedIcon />
         </Button>
       ),
     },
@@ -202,6 +208,12 @@ const Automations = () => {
         sortingMode="server"
         paginationMode="server"
         // TODO: get data.total from API header
+        slotProps={{
+          loadingOverlay: {
+            variant: 'skeleton',
+            noRowsVariant: 'skeleton',
+          },
+        }}
         rowCount={52}
         loading={isLoading}
         pagination

@@ -121,25 +121,29 @@ const Automations = () => {
     {
       field: 'id',
       headerName: 'Id',
-      width: 400,
+      flex: 1,
+      minWidth: 150,
       sortable: true,
     },
     {
       field: 'type',
       headerName: 'Type',
-      width: 400,
+      flex: 1,
+      minWidth: 150,
       sortable: true,
     },
     {
       field: 'sas',
       headerName: 'SAS',
-      width: 150,
+      flex: 1,
+      minWidth: 150,
       sortable: true,
     },
     {
       field: 'state',
       headerName: 'State',
-      width: 400,
+      flex: 1,
+      minWidth: 150,
       sortable: true,
       renderCell: (params) => (
         <Chip

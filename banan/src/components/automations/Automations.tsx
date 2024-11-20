@@ -1,19 +1,30 @@
 'use client';
 
-import { useGetAutomationListQuery } from '@/services/automation';
-import React, { useCallback, useEffect } from 'react';
 import {
-  Box,
-  Chip,
-} from '@mui/material';
+  useGetAutomationListQuery,
+  getStateColor,
+} from '@/services/automation';
+import React, { useCallback, useState } from 'react';
+import { Box, Chip, TextField, Button } from '@mui/material';
 import { QueryOperator } from '@/services/settings';
-import { DataGrid, GridColDef, GridFilterModel, GridSortModel, GridPaginationModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridFilterModel,
+  GridSortModel,
+  GridPaginationModel,
+} from '@mui/x-data-grid';
+import { useRouter } from 'next/navigation';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 const Automations = () => {
-  const [paginationModel, setPaginationModel] = React.useState<GridPaginationModel>({
-    page: 0, // DataGrid uses 0-based index for pages
-    pageSize: 10, // Default page size
-  });
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paginationModel, setPaginationModel] =
+    React.useState<GridPaginationModel>({
+      page: 0, // DataGrid uses 0-based index for pages
+      pageSize: 10, // Default page size
+    });
 
   const [queryOptions, setQueryOptions] = React.useState({
     page: 1,
@@ -77,18 +88,34 @@ const Automations = () => {
   }, []);
 
   // Handle pagination model change
-  const onPaginationModelChange = useCallback((newPaginationModel: GridPaginationModel) => {
-    setPaginationModel(newPaginationModel);
+  const onPaginationModelChange = useCallback(
+    (newPaginationModel: GridPaginationModel) => {
+      setPaginationModel(newPaginationModel);
 
-    setQueryOptions((prev) => ({
-      ...prev,
-      page: newPaginationModel.page + 1,
-      limit: newPaginationModel.pageSize,
-    }));
-  }, []);
+      setQueryOptions((prev) => ({
+        ...prev,
+        page: newPaginationModel.page + 1,
+        limit: newPaginationModel.pageSize,
+      }));
+    },
+    [],
+  );
+
+  // Handle search input
+  const onSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setSearchTerm(value);
+      setQueryOptions((prev) => ({
+        ...prev,
+        search: value,
+        page: 1,
+      }));
+    },
+    [],
+  );
 
   const dayjs = require('dayjs');
-
 
   const columns: GridColDef[] = [
     {
@@ -100,18 +127,29 @@ const Automations = () => {
     {
       field: 'type',
       headerName: 'Type',
-      width: 300,
+      width: 400,
+      sortable: true,
+    },
+    {
+      field: 'sas',
+      headerName: 'SAS',
+      width: 150,
       sortable: true,
     },
     {
       field: 'state',
       headerName: 'State',
-      width: 200,
+      width: 400,
       sortable: true,
       renderCell: (params) => (
-        // TODO: color based on state
-        <Chip label={params.value} color="success" />
-      )
+        <Chip
+          label={params.value}
+          sx={{
+            backgroundColor: getStateColor(params.value),
+            color: '#fff',
+          }}
+        />
+      ),
     },
     {
       field: 'last_activity',
@@ -120,25 +158,62 @@ const Automations = () => {
       sortable: true,
       valueGetter: (value) => `${dayjs(value).format('YYYY-M-D HH:mm:ss')}`,
     },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          size="small"
+          onClick={() => router.push(`automations/${params.row.id}`)}
+        >
+          <HelpOutlineOutlinedIcon />
+        </Button>
+      ),
+    },
   ];
 
   return (
-    <Box sx={{ height: "100%", width: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginBottom: 2,
+        }}
+      >
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={onSearchChange}
+          sx={{ width: 300 }}
+        />
+      </Box>
       <DataGrid
-        // ids duplicity... :/
-        rows={data?.items.map((item, idx) => ({
-          ...item,
-          idx,
-        })) || []}
+        rows={
+          data?.items.map((item, idx) => ({
+            ...item,
+            idx,
+          })) || []
+        }
         columns={columns}
         getRowId={(row) => row.idx}
         disableRowSelectionOnClick
         onFilterModelChange={onFilterChange}
         onSortModelChange={onSortModelChange}
-        filterMode='server'
-        sortingMode='server'
+        filterMode="server"
+        sortingMode="server"
         paginationMode="server"
         // TODO: get data.total from API header
+        slotProps={{
+          loadingOverlay: {
+            variant: 'skeleton',
+            noRowsVariant: 'skeleton',
+          },
+        }}
         rowCount={52}
         loading={isLoading}
         pagination

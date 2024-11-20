@@ -79,6 +79,18 @@ export const automationApi = createApi({
     getAutomationTypeDetail: builder.query<AutomationType, string>({
       query: (type) => `automation-types/${type}`,
     }),
+    getFailedAutomationList: builder.query<
+      { items: Automation[]; total: number },
+      Partial<UrlParams> | void
+    >({
+      query: (params: UrlParams = {}) => ({
+        url: urlParamsBuilder({
+          base: 'automations',
+          search: 'FAILED',
+          ...params,
+        }),
+      }),
+    }),
   }),
 });
 
@@ -90,4 +102,5 @@ export const {
   useGetAutomationDetailLogsQuery,
   useGetAutomationTypeListQuery,
   useGetAutomationTypeDetailQuery,
+  useGetFailedAutomationListQuery,
 } = automationApi;

@@ -1,14 +1,26 @@
-import { IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Badge,
+  Typography,
+} from '@mui/material';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import React from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from 'next/navigation';
+import { useNotifications } from '@/app/app/context/NotificationsContext';
 
-function NotificationsMenu() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+const NotificationsMenu = () => {
+  const { notifications, removeNotification } = useNotifications();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const router = useRouter();
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -16,23 +28,52 @@ function NotificationsMenu() {
   return (
     <>
       <Tooltip title="Notifications">
-        <IconButton onClick={handleClick}>
-          <NotificationsOutlinedIcon />
+        <IconButton onClick={handleOpen}>
+          <Badge badgeContent={notifications.length} color="error">
+            <NotificationsOutlinedIcon />
+          </Badge>
         </IconButton>
       </Tooltip>
-      <Menu
-        id="notif-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>
-          <Typography>No new notifications</Typography>
-        </MenuItem>
-        {/* Další notifikace lze přidat zde */}
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+        {notifications.length > 0 ? (
+          notifications.map((notification, index) => (
+            <MenuItem
+              key={`error-${notification.id}-${index}`}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Typography
+                sx={{
+                  color: 'red',
+                  flex: 1,
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  router.push(`/app/automations/${notification.id}`);
+                  handleClose(); // Zavře menu po kliknutí na text
+                }}
+              >
+                {notification.message}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => removeNotification(notification.id)}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </MenuItem>
+          ))
+        ) : (
+          <MenuItem>
+            <Typography>Žádné nové notifikace</Typography>
+          </MenuItem>
+        )}
       </Menu>
     </>
   );
-}
+};
 
 export default NotificationsMenu;

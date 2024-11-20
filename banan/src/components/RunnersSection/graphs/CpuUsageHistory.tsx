@@ -1,0 +1,42 @@
+import { Paper, Stack } from '@mui/material';
+import HighchartsReact from 'highcharts-react-official';
+import Highcharts from 'highcharts';
+
+export function CpuUsageHistory({ data }) {
+  const cpuSeries = data.map((item) => item.cpu * 100);
+
+  return (
+    <Stack component={Paper} p={1} width={600} height={300} flex={2}>
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={{
+          chart: {
+            type: 'area',
+          },
+          title: {
+            text: '',
+          },
+          xAxis: {
+            labels: {
+              enabled: false, // Odebere popisky na ose X
+            },
+            tickLength: 0, // Odebere značky (ticks) na ose X
+          },
+          yAxis: {
+            max: 100, // Nastaví maximální hodnotu na ose Y na 100
+            title: {
+              text: 'Využití (%)',
+            },
+          },
+          series: [
+            {
+              name: `CPU (${cpuSeries[cpuSeries.length - 1]}%)`,
+              data: cpuSeries,
+              color: '#BE3B2B',
+            },
+          ],
+        }}
+      />
+    </Stack>
+  );
+}

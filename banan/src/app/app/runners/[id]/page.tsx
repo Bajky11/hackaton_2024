@@ -1,19 +1,21 @@
 'use client';
 
-import { Card, Paper, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 import {
-  MetricWithRunner,
   useGetJobListQuery,
   useGetMetricWithRunnerDetailQuery,
 } from '@/services/runner';
 import { useParams } from 'next/navigation';
-import HighchartsReact from 'highcharts-react-official';
-import Highcharts from 'highcharts';
-import CustomTable from '@/components/CustomTable';
+import { MetricsCard } from '@/components/RunnersSection/MetricsCard';
+import { CpuMetricsDetail } from '@/components/RunnersSection/metricDetails/CpuMetricsDetail';
+import { MemoryMetricsDetail } from '@/components/RunnersSection/metricDetails/MemoryMetricsDetail';
+import { NetworkMetricsDetail } from '@/components/RunnersSection/metricDetails/NetworkMetricsDetail';
+import { DiskMetricsDetail } from '@/components/RunnersSection/metricDetails/DiskMetricsDetail';
+import { JobsTable } from '@/components/tables/JobsTable';
 
 export default function Page() {
-  const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [selectedMetric, setSelectedMetric] = useState<string | null>('cpu');
   const { id } = useParams();
   const {
     data: runnerDetailData,
@@ -82,28 +84,19 @@ export default function Page() {
     },
   ];
 
-  const columns = [
-    { field: 'id', headerName: 'Id' },
-    { field: 'state', headerName: 'State' },
-    { field: 'organization', headerName: 'Organization' },
-    { field: 'SAS', headerName: 'Sas' },
-    { field: 'runner', headerName: 'Runner' },
-    { field: 'timestamp', headerName: 'Timestamp' },
-  ];
-
   function displaySelectedMetrics() {
     switch (selectedMetric) {
       case 'cpu': {
         return <CpuMetricsDetail data={runnerDetailData.metrics} />;
       }
       case 'memory': {
-        return 'memory';
+        return <MemoryMetricsDetail data={runnerDetailData.metrics} />;
       }
       case 'network': {
-        return 'network';
+        return <NetworkMetricsDetail data={runnerDetailData.metrics} />;
       }
       case 'disk': {
-        return 'disk';
+        return <DiskMetricsDetail data={runnerDetailData.metrics} />;
       }
       default:
         return null;
@@ -125,171 +118,7 @@ export default function Page() {
         ))}
       </Stack>
       {displaySelectedMetrics()}
-      <CustomTable
-        columns={columns}
-        data={runnerJobsData}
-        onRowClick={() => {}}
-      />
-    </Stack>
-  );
-}
-
-interface MetricsCardProps {
-  name: string;
-  value: string;
-  color: string;
-  selected: boolean;
-  onClick: () => void;
-}
-
-function MetricsCard({
-  name,
-  value,
-  color,
-  selected,
-  onClick,
-}: MetricsCardProps) {
-  const [hovered, setHovered] = useState(false);
-
-  const headingTextColor = hovered ? 'black' : selected ? 'black' : color;
-  const valueTextColor = hovered ? 'black' : selected ? 'black' : '#3F3F3F';
-  const backgroundColor = hovered ? color : selected ? color : 'white';
-
-  return (
-    <Card
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        padding: '8px',
-        backgroundColor,
-        flex: 1,
-        cursor: 'pointer',
-        transition: 'background-color 0.3s',
-      }}
-    >
-      <Typography
-        fontWeight="bold"
-        fontSize={20}
-        color={headingTextColor}
-        textTransform={'uppercase'}
-      >
-        {name}
-      </Typography>
-      <Typography fontWeight="bold" fontSize={36} color={valueTextColor}>
-        {value}
-      </Typography>
-    </Card>
-  );
-}
-
-interface CpuMetricsDetailProps {
-  data: MetricWithRunner | undefined;
-}
-
-function CpuMetricsDetail({ data }: CpuMetricsDetailProps) {
-  if (!data) return 'No data found';
-
-  const cpuSeries = data.map((item) => item.cpu * 100);
-  const maxCpu = 100;
-  const lastCpuValue = data[data.length - 1].cpu * 100;
-  const utilizedCpu = (lastCpuValue / maxCpu) * 100;
-  const freeCpu = 100 - utilizedCpu;
-
-  return (
-    <Stack
-      direction={'row'}
-      gap={1}
-      sx={{
-        opacity: 0,
-        transform: 'translateY(-20px)',
-        animation: 'fadeInSlideDown 0.5s forwards',
-        '@keyframes fadeInSlideDown': {
-          to: {
-            opacity: 1,
-            transform: 'translateY(0)',
-          },
-        },
-      }}
-    >
-      <Stack component={Paper} p={1} width={300} height={300} flex={1}>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={{
-            chart: {
-              type: 'pie',
-            },
-            title: {
-              text: '',
-            },
-            plotOptions: {
-              pie: {
-                innerSize: '60%', // Donut efekt
-                dataLabels: {
-                  enabled: true,
-                  distance: 30, // Vzdálenost popisků od grafu
-                  format: '{point.name}: {point.y:.1f}%',
-                  style: {
-                    color: '#000000', // Barva textu popisků
-                  },
-                },
-              },
-            },
-            series: [
-              {
-                name: 'CPU Využití',
-                data: [
-                  { name: 'Využito', y: utilizedCpu, color: 'red' }, // Oranžová barva
-                  { name: 'Volné', y: freeCpu, color: 'lightgray' }, // Zelená barva
-                ],
-              },
-            ],
-            // Přidání textu doprostřed grafu
-            subtitle: {
-              text: `${utilizedCpu.toFixed(1)}%`,
-              align: 'center',
-              verticalAlign: 'middle',
-              style: {
-                fontSize: '32px',
-                fontWeight: 'bold',
-                color: 'black',
-              },
-            },
-          }}
-        />
-      </Stack>
-
-      <Stack component={Paper} p={1} width={600} height={300} flex={2}>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={{
-            chart: {
-              type: 'area',
-            },
-            title: {
-              text: '',
-            },
-            xAxis: {
-              labels: {
-                enabled: false, // Odebere popisky na ose X
-              },
-              tickLength: 0, // Odebere značky (ticks) na ose X
-            },
-            yAxis: {
-              max: 100, // Nastaví maximální hodnotu na ose Y na 100
-              title: {
-                text: 'Využití (%)',
-              },
-            },
-            series: [
-              {
-                name: `CPU (${cpuSeries[cpuSeries.length - 1]}%)`,
-                data: cpuSeries,
-              },
-            ],
-          }}
-        />
-      </Stack>
+      <JobsTable data={runnerJobsData} />
     </Stack>
   );
 }

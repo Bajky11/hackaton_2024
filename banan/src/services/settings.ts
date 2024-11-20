@@ -102,7 +102,7 @@ export type UrlParams = {
 export const urlParamsBuilder = ({
   base,
   page = 1,
-  limit = -1,
+  limit = 0,
   sort,
   order,
   search,

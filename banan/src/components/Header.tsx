@@ -12,12 +12,7 @@ const Header = () => {
       alignItems={'flex-start'}
       height={header_height}
     >
-      <Stack direction={'row'} alignItems={'center'} gap={1}>
-        <SortIcon />
-        <Typography sx={{ textTransform: 'uppercase' }} variant={'h6'}>
-          TITLE
-        </Typography>
-      </Stack>
+      <Stack direction={'row'} alignItems={'center'} gap={1}></Stack>
       <UserSection />
     </Stack>
   );

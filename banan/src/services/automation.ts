@@ -7,6 +7,7 @@ export type Automation = {
   type: string;
   state: string;
   last_activity: string;
+  sas: string;
 };
 
 export type AutomationLog = {

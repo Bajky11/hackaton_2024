@@ -1,168 +1,223 @@
 'use client';
 
-import {
-  useGetAutomationListQuery,
-  useGetAutomationTypeListQuery,
-} from '@/services/automation';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Card,
   CardContent,
-  CardActions,
+  Chip,
+  Box,
   Button,
   Stack,
   Typography,
-  Select,
-  MenuItem,
   TextField,
-  Chip,
+  MenuItem,
+  Autocomplete,
+  Select,
   Pagination,
 } from '@mui/material';
 import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
-import { useRouter } from 'next/navigation';
-import { getStateColor } from '@/services/automation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  useGetAutomationTypeListQuery,
+  useGetAutomationListQuery,
+} from '@/services/automation';
+import { useGetSASListQuery } from '@/services/sas';
+import { getStateColor, Automation } from '@/services/automation';
+import { Order } from '@/services/settings';
+
+type Option = { label: string; group: string };
+
+const formatLabel = (label: string) => label.replace(/_/g, ' ');
 
 const Automations: React.FC = () => {
   const router = useRouter();
-  const [filterType, setFilterType] = useState<string>('');
-  const [filterState, setFilterState] = useState<string>('');
+  const searchParams = useSearchParams();
+
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [automationTypes, setAutomationTypes] = useState<string[]>([]);
-  const [automationStates, setAutomationStates] = useState<string[]>([]);
-  const [originalData, setOriginalData] = useState<any[]>([]); // Původní data
-  const [filteredData, setFilteredData] = useState<any[]>([]); // Filtrovaná data
-  const [page, setPage] = useState<number>(1); // Aktuální stránka
-  const [totalPages, setTotalPages] = useState<number>(1); // Celkový počet stránek
+  const [sortBy, setSortBy] = useState<string>('none');
+  const [sortOrder, setSortOrder] = useState<Order>(Order.ASC);
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
 
-  // Limit položek na stránku
-  const limit = 10;
+  const { data: automationTypes } = useGetAutomationTypeListQuery({});
+  const { data: sasList } = useGetSASListQuery();
 
-  // Načti data z API s ohledem na stránkování
-  const { data: automationList } = useGetAutomationListQuery({ page, limit });
-  const { data: automationTypeData } = useGetAutomationTypeListQuery({
-    limit: 100,
+  const { data: automationList } = useGetAutomationListQuery({
+    search: searchTerm,
+    page,
+    limit,
+    ...(sortBy !== 'none' && { sort: sortBy, order: sortOrder }),
   });
 
+  // Načtení hodnot z URL při načtení stránky
   useEffect(() => {
-    if (automationList) {
-      console.log('automationList:', automationList);
-      setOriginalData(automationList.items); // Ulož data (předpokládáme, že data jsou v `items`)
-      setFilteredData(automationList.items); // Inicializuj filtrovaná data
-      console.log(automationList.total);
-      setTotalPages(Math.ceil(automationList.total / limit)); // Nastav celkový počet stránek
-    }
-  }, [automationList]);
+    if (searchParams) {
+      const initialSearch = searchParams.get('search') || '';
+      const initialSortBy = searchParams.get('sortBy') || 'none';
+      const initialSortOrder =
+        (searchParams.get('sortOrder') as Order) || Order.ASC;
+      const initialPage = parseInt(searchParams.get('page') || '1', 10);
+      const initialLimit = parseInt(searchParams.get('limit') || '10', 10);
 
+      setSearchTerm(initialSearch);
+      console.log(searchTerm);
+      setSortBy(initialSortBy);
+      setSortOrder(initialSortOrder);
+      setPage(initialPage);
+      setLimit(initialLimit);
+    }
+  }, [searchParams]);
+
+  // Synchronizace stavu s URL
   useEffect(() => {
-    if (automationTypeData) {
-      const types = Array.from(
-        new Set(automationTypeData.map((type) => type.type)),
-      );
-      setAutomationTypes(types);
+    const params = new URLSearchParams();
 
-      const states = Array.from(
-        new Set(automationTypeData.flatMap((type) => type.states)),
-      );
-      setAutomationStates(states);
-    }
-  }, [automationTypeData]);
+    if (searchTerm) params.set('search', searchTerm);
+    if (sortBy !== 'none') params.set('sortBy', sortBy);
+    if (sortOrder) params.set('sortOrder', sortOrder);
+    if (page !== 1) params.set('page', String(page));
+    if (limit !== 10) params.set('limit', String(limit));
 
-  // Funkce pro filtrování a řazení dat
-  useEffect(() => {
-    let data = [...originalData];
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [searchTerm, sortBy, sortOrder, page, limit]);
 
-    // Filtr podle vyhledávacího termínu
-    if (searchTerm.trim()) {
-      const lowerCaseSearchTerm = searchTerm.trim().toLowerCase();
-      data = data.filter(
-        (automation) =>
-          automation.id.toLowerCase().includes(lowerCaseSearchTerm) ||
-          automation.type.toLowerCase().includes(lowerCaseSearchTerm),
-      );
-    }
+  const uniqueOptions = (options: Option[] | undefined | null): Option[] => {
+    if (!options) return [];
+    const uniqueSet = new Set<string>();
+    return options.filter(({ label }) => {
+      if (uniqueSet.has(label)) {
+        return false;
+      }
+      uniqueSet.add(label);
+      return true;
+    });
+  };
 
-    // Filtr podle typu
-    if (filterType) {
-      data = data.filter((automation) => automation.type === filterType);
-    }
+  const options: Option[] = useMemo(() => {
+    const typesOptions =
+      automationTypes?.map((type) => ({
+        label: type.type,
+        group: '----type----',
+      })) || [];
 
-    // Filtr podle stavu
-    if (filterState) {
-      data = data.filter((automation) => automation.state === filterState);
-    }
+    const sasOptions =
+      sasList?.map((sas) => ({
+        label: sas,
+        group: '----sas----',
+      })) || [];
 
-    // Řazení dat
-    data.sort((a, b) =>
-      sortOrder === 'asc'
-        ? new Date(a.last_activity).getTime() -
-          new Date(b.last_activity).getTime()
-        : new Date(b.last_activity).getTime() -
-          new Date(a.last_activity).getTime(),
-    );
+    const stateOptions =
+      automationTypes?.flatMap((type) =>
+        type.states.map((state) => ({
+          label: state,
+          group: '----state----',
+        })),
+      ) || [];
 
-    setFilteredData(data); // Aktualizuj filtrovaná data
-  }, [searchTerm, filterType, filterState, sortOrder, originalData]);
+    // Odstranění duplicit
+    const uniqueTypesOptions = uniqueOptions(typesOptions);
+    const uniqueSasOptions = uniqueOptions(sasOptions);
+    const uniqueStateOptions = uniqueOptions(stateOptions);
 
-  // Funkce pro změnu stránky
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
+    return [...uniqueTypesOptions, ...uniqueSasOptions, ...uniqueStateOptions];
+  }, [automationTypes, sasList]);
+
+  const sortFields = useMemo(() => {
+    const fields: Array<keyof Automation> = [
+      'id',
+      'type',
+      'state',
+      'last_activity',
+      'sas',
+    ];
+    return ['none', ...fields];
+  }, []);
+
+  const handleSearchChange = (event: any, value: string | null) => {
+    setSearchTerm(value || '');
+    setPage(1);
+  };
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+  };
+
+  const handleLimitChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setLimit(Number(event.target.value));
+    setPage(1);
+  };
+
+  const handleSortChange = (field: string) => {
+    setSortBy(field);
+  };
+
+  const handleSortOrderChange = (order: Order) => {
+    setSortOrder(order);
   };
 
   return (
     <Stack direction="column" gap={2}>
-      <Stack direction="row" gap={1}>
-        <Select
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
-          displayEmpty
-          variant="outlined"
-        >
-          <MenuItem value="">Všechny typy</MenuItem>
-          {automationTypes.map((type) => (
-            <MenuItem key={type} value={type}>
-              {type}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <Select
-          value={filterState}
-          onChange={(e) => setFilterState(e.target.value)}
-          displayEmpty
-          variant="outlined"
-        >
-          <MenuItem value="">Všechny stavy</MenuItem>
-          {automationStates.map((state) => (
-            <MenuItem key={state} value={state}>
-              {state}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <TextField
-          label="Vyhledávání"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          variant="outlined"
+      <Stack direction="row" gap={2} alignItems="center">
+        <Autocomplete
+          freeSolo
+          options={options}
+          groupBy={(option) => option.group}
+          getOptionLabel={(option) => option.label}
+          onInputChange={(event, value) => handleSearchChange(event, value)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Vyhledávání"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              sx={{ width: 400 }}
+            />
+          )}
+          renderGroup={(params) => (
+            <div key={`key_${params.key}`}>
+              <Box
+                sx={{
+                  fontWeight: 'bold',
+                  padding: '8px 16px',
+                  backgroundColor: '#f0f0f0',
+                  borderBottom: '1px solid #ddd',
+                }}
+              >
+                {params.group}
+              </Box>
+              {params.children}
+            </div>
+          )}
         />
 
         <Select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-          variant="outlined"
+          value={sortBy}
+          onChange={(e) => handleSortChange(e.target.value)}
+          size="small"
+          sx={{ minWidth: 150 }}
         >
-          <MenuItem value="asc">Nejstarší</MenuItem>
-          <MenuItem value="desc">Nejnovější</MenuItem>
+          {sortFields.map((field) => (
+            <MenuItem key={`sort_${field}`} value={field}>
+              {field === 'none' ? 'No Sorting' : formatLabel(field)}
+            </MenuItem>
+          ))}
+        </Select>
+
+        <Select
+          value={sortOrder}
+          onChange={(e) => handleSortOrderChange(e.target.value as Order)}
+          size="small"
+          sx={{ minWidth: 100 }}
+          disabled={sortBy === 'none'}
+        >
+          <MenuItem value={Order.ASC}>ASC</MenuItem>
+          <MenuItem value={Order.DESC}>DESC</MenuItem>
         </Select>
       </Stack>
 
-      {/* Filtrované a seřazené seznamy */}
       <Stack direction="column" gap={2}>
-        {filteredData.map((automation, index) => (
+        {automationList?.items.map((automation, index) => (
           <Card
             key={`${automation.id}-${index}`}
             variant="outlined"
@@ -200,15 +255,28 @@ const Automations: React.FC = () => {
         ))}
       </Stack>
 
-      {/* Stránkování */}
-      <Pagination
-        count={totalPages}
-        page={page}
-        onChange={handlePageChange}
-        variant="outlined"
-        color="primary"
-        sx={{ alignSelf: 'center' }}
-      />
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mt={2}
+      >
+        <Pagination
+          count={page + (automationList?.items.length < limit ? 0 : 1)}
+          page={page}
+          onChange={handlePageChange}
+        />
+        <Select
+          value={limit}
+          onChange={handleLimitChange}
+          size="small"
+          sx={{ minWidth: 150 }}
+        >
+          <MenuItem value={5}>5 položek</MenuItem>
+          <MenuItem value={10}>10 položek</MenuItem>
+          <MenuItem value={20}>20 položek</MenuItem>
+        </Select>
+      </Stack>
     </Stack>
   );
 };

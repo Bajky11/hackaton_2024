@@ -2,9 +2,7 @@
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import {
-  useGetAutomationDetailQuery,
-} from '@/services/automation';
+import { useGetAutomationDetailQuery } from '@/services/automation';
 import {
   Typography,
   Stack,
@@ -20,7 +18,8 @@ import { getStateColor } from '@/services/automation';
 
 const AutomationDetail: React.FC = () => {
   const { id } = useParams();
-  const { data: automationDetail, isLoading: isDetailLoading } = useGetAutomationDetailQuery(id);
+  const { data: automationDetail, isLoading: isDetailLoading } =
+    useGetAutomationDetailQuery(id);
 
   if (isDetailLoading) {
     return <CircularProgress />;
@@ -36,19 +35,39 @@ const AutomationDetail: React.FC = () => {
       <Card>
         <CardContent>
           <Typography variant="h6">ID:</Typography>
-          <Typography variant="body1" gutterBottom>{automationDetail.id}</Typography>
+          <Typography variant="body1" gutterBottom>
+            {automationDetail.id}
+          </Typography>
 
           <Divider />
 
-          <Typography variant="h6" sx={{ marginTop: 2 }}>Typ:</Typography>
-          <Typography variant="body1" gutterBottom>{automationDetail.type}</Typography>
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Typ:
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {automationDetail.type}
+          </Typography>
 
           <Divider />
 
-          <Typography variant="h6" sx={{ marginTop: 2 }}>Aktuální Stav:</Typography>
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Sas:
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {automationDetail.sas}
+          </Typography>
+
+          <Divider />
+
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Aktuální Stav:
+          </Typography>
           <Chip
             label={automationDetail.state}
-            sx={{ backgroundColor: getStateColor(automationDetail.state), color: '#fff' }}
+            sx={{
+              backgroundColor: getStateColor(automationDetail.state),
+              color: '#fff',
+            }}
           />
         </CardContent>
       </Card>
@@ -64,7 +83,10 @@ const AutomationDetail: React.FC = () => {
         <AutomationLogs id={automationDetail.id} />
 
         {/* Stavový Diagram */}
-        <StateDiagram type={automationDetail.type} currentState={automationDetail.state} />
+        <StateDiagram
+          type={automationDetail.type}
+          currentState={automationDetail.state}
+        />
       </Stack>
     </Stack>
   );

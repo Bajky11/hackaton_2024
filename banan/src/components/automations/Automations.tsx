@@ -1,283 +1,214 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
 import {
-  Card,
-  CardContent,
-  Chip,
-  Box,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-  MenuItem,
-  Autocomplete,
-  Select,
-  Pagination,
-} from '@mui/material';
-import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
-import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  useGetAutomationTypeListQuery,
   useGetAutomationListQuery,
+  getStateColor,
 } from '@/services/automation';
-import { useGetSASListQuery } from '@/services/sas';
-import { getStateColor, Automation } from '@/services/automation';
-import { Order } from '@/services/settings';
+import React, { useCallback, useState } from 'react';
+import { Box, Chip, TextField, Button } from '@mui/material';
+import { QueryOperator } from '@/services/settings';
+import {
+  DataGrid,
+  GridColDef,
+  GridFilterModel,
+  GridSortModel,
+  GridPaginationModel,
+} from '@mui/x-data-grid';
+import { useRouter } from 'next/navigation';
 
-type Option = { label: string; group: string };
-
-const formatLabel = (label: string) => label.replace(/_/g, ' ');
-
-const Automations: React.FC = () => {
+const Automations = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paginationModel, setPaginationModel] =
+    React.useState<GridPaginationModel>({
+      page: 0, // DataGrid uses 0-based index for pages
+      pageSize: 10, // Default page size
+    });
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('none');
-  const [sortOrder, setSortOrder] = useState<Order>(Order.ASC);
-  const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-
-  const { data: automationTypes } = useGetAutomationTypeListQuery({});
-  const { data: sasList } = useGetSASListQuery();
-
-  const { data: automationList } = useGetAutomationListQuery({
-    search: searchTerm,
-    page,
-    limit,
-    ...(sortBy !== 'none' && { sort: sortBy, order: sortOrder }),
+  const [queryOptions, setQueryOptions] = React.useState({
+    page: 1,
+    limit: paginationModel.pageSize,
   });
 
-  // Načtení hodnot z URL při načtení stránky
-  useEffect(() => {
-    if (searchParams) {
-      const initialSearch = searchParams.get('search') || '';
-      const initialSortBy = searchParams.get('sortBy') || 'none';
-      const initialSortOrder =
-        (searchParams.get('sortOrder') as Order) || Order.ASC;
-      const initialPage = parseInt(searchParams.get('page') || '1', 10);
-      const initialLimit = parseInt(searchParams.get('limit') || '10', 10);
+  const { data, error, isLoading } = useGetAutomationListQuery(queryOptions);
 
-      setSearchTerm(initialSearch);
-      console.log(searchTerm);
-      setSortBy(initialSortBy);
-      setSortOrder(initialSortOrder);
-      setPage(initialPage);
-      setLimit(initialLimit);
-    }
-  }, [searchParams]);
-
-  // Synchronizace stavu s URL
-  useEffect(() => {
-    const params = new URLSearchParams();
-
-    if (searchTerm) params.set('search', searchTerm);
-    if (sortBy !== 'none') params.set('sortBy', sortBy);
-    if (sortOrder) params.set('sortOrder', sortOrder);
-    if (page !== 1) params.set('page', String(page));
-    if (limit !== 10) params.set('limit', String(limit));
-
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [searchTerm, sortBy, sortOrder, page, limit]);
-
-  const uniqueOptions = (options: Option[] | undefined | null): Option[] => {
-    if (!options) return [];
-    const uniqueSet = new Set<string>();
-    return options.filter(({ label }) => {
-      if (uniqueSet.has(label)) {
-        return false;
-      }
-      uniqueSet.add(label);
-      return true;
-    });
+  // Mappings for DataGrid operators to QueryOperator
+  const operatorMapping: { [key: string]: QueryOperator } = {
+    contains: QueryOperator.LIKE,
+    equals: QueryOperator.EQ,
+    startsWith: QueryOperator.START,
+    endsWith: QueryOperator.END,
+    is: QueryOperator.EQ,
+    isNot: QueryOperator.NE,
+    greaterThan: QueryOperator.GT,
+    greaterThanOrEqual: QueryOperator.GTE,
+    lessThan: QueryOperator.LT,
+    lessThanOrEqual: QueryOperator.LTE,
   };
 
-  const options: Option[] = useMemo(() => {
-    const typesOptions =
-      automationTypes?.map((type) => ({
-        label: type.type,
-        group: '----type----',
-      })) || [];
+  // Transform GridFilterModel into query parameters
+  const transformFilters = (filterModel: GridFilterModel) => {
+    const { items } = filterModel;
+    return items
+      .filter((filter) => filter.field && filter.operator && filter.value)
+      .map((filter) => ({
+        property: filter.field,
+        operator: operatorMapping[filter.operator] ?? QueryOperator.EQ,
+        value: filter.value,
+      }));
+  };
 
-    const sasOptions =
-      sasList?.map((sas) => ({
-        label: sas,
-        group: '----sas----',
-      })) || [];
-
-    const stateOptions =
-      automationTypes?.flatMap((type) =>
-        type.states.map((state) => ({
-          label: state,
-          group: '----state----',
-        })),
-      ) || [];
-
-    // Odstranění duplicit
-    const uniqueTypesOptions = uniqueOptions(typesOptions);
-    const uniqueSasOptions = uniqueOptions(sasOptions);
-    const uniqueStateOptions = uniqueOptions(stateOptions);
-
-    return [...uniqueTypesOptions, ...uniqueSasOptions, ...uniqueStateOptions];
-  }, [automationTypes, sasList]);
-
-  const sortFields = useMemo(() => {
-    const fields: Array<keyof Automation> = [
-      'id',
-      'type',
-      'state',
-      'last_activity',
-      'sas',
-    ];
-    return ['none', ...fields];
+  // Handle filter changes
+  const onFilterChange = useCallback((filterModel: GridFilterModel) => {
+    const queryFilters = transformFilters(filterModel);
+    setQueryOptions((prev) => ({
+      ...prev,
+      query: queryFilters,
+    }));
   }, []);
 
-  const handleSearchChange = (event: any, value: string | null) => {
-    setSearchTerm(value || '');
-    setPage(1);
-  };
+  // Handle sorting changes
+  const onSortModelChange = useCallback((sortModel: GridSortModel) => {
+    if (sortModel.length > 0) {
+      const { field, sort } = sortModel[0];
+      setQueryOptions((prev) => ({
+        ...prev,
+        sort: field,
+        order: sort ?? 'asc', // Default to ascending order if not specified
+      }));
+    } else {
+      // Clear sorting if no sort model is set
+      setQueryOptions((prev) => ({
+        ...prev,
+        sort: undefined,
+        order: undefined,
+      }));
+    }
+  }, []);
 
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
+  // Handle pagination model change
+  const onPaginationModelChange = useCallback(
+    (newPaginationModel: GridPaginationModel) => {
+      setPaginationModel(newPaginationModel);
 
-  const handleLimitChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setLimit(Number(event.target.value));
-    setPage(1);
-  };
+      setQueryOptions((prev) => ({
+        ...prev,
+        page: newPaginationModel.page + 1,
+        limit: newPaginationModel.pageSize,
+      }));
+    },
+    [],
+  );
 
-  const handleSortChange = (field: string) => {
-    setSortBy(field);
-  };
+  // Handle search input
+  const onSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setSearchTerm(value);
+      setQueryOptions((prev) => ({
+        ...prev,
+        search: value,
+        page: 1,
+      }));
+    },
+    [],
+  );
 
-  const handleSortOrderChange = (order: Order) => {
-    setSortOrder(order);
-  };
+  const dayjs = require('dayjs');
+
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'Id',
+      width: 400,
+      sortable: true,
+    },
+    {
+      field: 'type',
+      headerName: 'Type',
+      width: 400,
+      sortable: true,
+    },
+    {
+      field: 'state',
+      headerName: 'State',
+      width: 400,
+      sortable: true,
+      renderCell: (params) => (
+        <Chip
+          label={params.value}
+          sx={{
+            backgroundColor: getStateColor(params.value),
+            color: '#fff',
+          }}
+        />
+      ),
+    },
+    {
+      field: 'last_activity',
+      headerName: 'Last activity',
+      width: 200,
+      sortable: true,
+      valueGetter: (value) => `${dayjs(value).format('YYYY-M-D HH:mm:ss')}`,
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 150,
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          size="small"
+          variant="contained"
+          onClick={() => router.push(`automations/${params.row.id}`)}
+        >
+          Detail
+        </Button>
+      ),
+    },
+  ];
 
   return (
-    <Stack direction="column" gap={2}>
-      <Stack direction="row" gap={2} alignItems="center">
-        <Autocomplete
-          freeSolo
-          options={options}
-          groupBy={(option) => option.group}
-          getOptionLabel={(option) => option.label}
-          onInputChange={(event, value) => handleSearchChange(event, value)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Vyhledávání"
-              variant="outlined"
-              size="small"
-              value={searchTerm}
-              sx={{ width: 400 }}
-            />
-          )}
-          renderGroup={(params) => (
-            <div key={`key_${params.key}`}>
-              <Box
-                sx={{
-                  fontWeight: 'bold',
-                  padding: '8px 16px',
-                  backgroundColor: '#f0f0f0',
-                  borderBottom: '1px solid #ddd',
-                }}
-              >
-                {params.group}
-              </Box>
-              {params.children}
-            </div>
-          )}
-        />
-
-        <Select
-          value={sortBy}
-          onChange={(e) => handleSortChange(e.target.value)}
-          size="small"
-          sx={{ minWidth: 150 }}
-        >
-          {sortFields.map((field) => (
-            <MenuItem key={`sort_${field}`} value={field}>
-              {field === 'none' ? 'No Sorting' : formatLabel(field)}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <Select
-          value={sortOrder}
-          onChange={(e) => handleSortOrderChange(e.target.value as Order)}
-          size="small"
-          sx={{ minWidth: 100 }}
-          disabled={sortBy === 'none'}
-        >
-          <MenuItem value={Order.ASC}>ASC</MenuItem>
-          <MenuItem value={Order.DESC}>DESC</MenuItem>
-        </Select>
-      </Stack>
-
-      <Stack direction="column" gap={2}>
-        {automationList?.items.map((automation, index) => (
-          <Card
-            key={`${automation.id}-${index}`}
-            variant="outlined"
-            sx={{
-              borderColor: getStateColor(automation.state),
-              borderWidth: 2,
-              borderStyle: 'solid',
-            }}
-          >
-            <CardContent
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                gap: '10px',
-              }}
-            >
-              <Typography variant="h6">{automation.id}</Typography>
-              <Chip
-                label={automation.state}
-                variant="filled"
-                sx={{
-                  backgroundColor: getStateColor(automation.state),
-                  color: '#fff',
-                }}
-              />
-              <Button
-                size="small"
-                onClick={() => router.push(`automations/${automation.id}`)}
-              >
-                <HelpOutlinedIcon />
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </Stack>
-
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mt={2}
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginBottom: 2,
+        }}
       >
-        <Pagination
-          count={page + (automationList?.items.length < limit ? 0 : 1)}
-          page={page}
-          onChange={handlePageChange}
-        />
-        <Select
-          value={limit}
-          onChange={handleLimitChange}
+        <TextField
+          label="Search"
+          variant="outlined"
           size="small"
-          sx={{ minWidth: 150 }}
-        >
-          <MenuItem value={5}>5 položek</MenuItem>
-          <MenuItem value={10}>10 položek</MenuItem>
-          <MenuItem value={20}>20 položek</MenuItem>
-        </Select>
-      </Stack>
-    </Stack>
+          value={searchTerm}
+          onChange={onSearchChange}
+          sx={{ width: 300 }}
+        />
+      </Box>
+      <DataGrid
+        rows={
+          data?.items.map((item, idx) => ({
+            ...item,
+            idx,
+          })) || []
+        }
+        columns={columns}
+        getRowId={(row) => row.idx}
+        disableRowSelectionOnClick
+        onFilterModelChange={onFilterChange}
+        onSortModelChange={onSortModelChange}
+        filterMode="server"
+        sortingMode="server"
+        paginationMode="server"
+        // TODO: get data.total from API header
+        rowCount={52}
+        loading={isLoading}
+        pagination
+        paginationModel={paginationModel}
+        onPaginationModelChange={onPaginationModelChange}
+      />
+    </Box>
   );
 };
 

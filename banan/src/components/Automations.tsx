@@ -16,7 +16,7 @@ const Automations = () => {
   });
 
   const [queryOptions, setQueryOptions] = React.useState({
-    page: paginationModel.page,
+    page: 1,
     limit: paginationModel.pageSize,
   });
 
@@ -82,7 +82,7 @@ const Automations = () => {
 
     setQueryOptions((prev) => ({
       ...prev,
-      page: newPaginationModel.page,
+      page: newPaginationModel.page + 1,
       limit: newPaginationModel.pageSize,
     }));
   }, []);

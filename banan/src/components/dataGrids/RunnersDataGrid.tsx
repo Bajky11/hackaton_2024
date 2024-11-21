@@ -3,17 +3,50 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
 import { useGetRunnerListQuery } from '@/services/runner';
 import DataGridWithSearch from '@/components/DataGridWithSearch';
+import { Chip } from '@mui/material';
 
 interface RunnersDataGridProps {
   navigate?: boolean;
+  externalSearchParam?: string; // Přidán prop pro externí search param
 }
 
-const RunnersDataGrid = ({ navigate = true }: RunnersDataGridProps) => {
+const getChipColor = (state: string): string => {
+  switch (state) {
+    case 'active':
+      return '#4BA43A';
+    case 'idle':
+      return '#499AF2';
+    case 'offline':
+      return 'gray';
+    case 'failed':
+      return '#BE3B2B';
+    default:
+      return 'gray';
+  }
+};
+
+const RunnersDataGrid = ({
+  navigate = true,
+  externalSearchParam,
+}: RunnersDataGridProps) => {
   const router = useRouter();
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'state', headerName: 'State', flex: 1 },
+    {
+      field: 'state',
+      headerName: 'State',
+      flex: 1,
+      renderCell: (params) => {
+        const chipColor = getChipColor(params.value);
+        return (
+          <Chip
+            label={params.value}
+            sx={{ backgroundColor: chipColor, color: 'white' }}
+          />
+        );
+      },
+    },
     { field: 'runner_group', headerName: 'Runner Group', flex: 1 },
     { field: 'organization', headerName: 'Organization', flex: 1 },
   ];
@@ -37,9 +70,11 @@ const RunnersDataGrid = ({ navigate = true }: RunnersDataGridProps) => {
 
   return (
     <DataGridWithSearch
+      heading={'Runners table'}
       fetchData={fetchData}
       columns={columns}
       onRowClick={handleRowClick}
+      externalSearchParam={externalSearchParam}
     />
   );
 };

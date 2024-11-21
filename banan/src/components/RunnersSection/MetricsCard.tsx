@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 
 interface MetricsCardProps {
   name: string;
@@ -23,7 +23,10 @@ export function MetricsCard({
   const backgroundColor = hovered ? color : selected ? color : 'white';
 
   return (
-    <Card
+    <Stack
+      component={Card}
+      alignItems={'center'}
+      justifyContent={'center'}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -37,15 +40,15 @@ export function MetricsCard({
     >
       <Typography
         fontWeight="bold"
-        fontSize={20}
+        variant={'h6'}
         color={headingTextColor}
         textTransform={'uppercase'}
       >
         {name}
       </Typography>
-      <Typography fontWeight="bold" fontSize={36} color={valueTextColor}>
+      <Typography fontWeight="bold" color={valueTextColor} variant={'h4'}>
         {value}
       </Typography>
-    </Card>
+    </Stack>
   );
 }

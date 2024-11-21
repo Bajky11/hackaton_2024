@@ -1,32 +1,164 @@
 'use client';
 
-import { Stack } from '@mui/material';
+import { Card, Stack, Typography, Skeleton } from '@mui/material';
 import RunnersDataGrid from '@/components/dataGrids/RunnersDataGrid';
 import { useEffect, useState } from 'react';
 import { fetchCounts } from '@/functions/fetch/fetchCounts';
 import { QueryOperator } from '@/services/settings';
 
+const states = [
+  { label: 'Active', color: '#4BA43A', key: 'active' },
+  { label: 'Idle', color: '#499AF2', key: 'idle' },
+  { label: 'Offline', color: 'Gray', key: 'offline' },
+  { label: 'Failed', color: '#BE3B2B', key: 'failed' },
+];
+
 export default function Page() {
-  const [totalCount, setTotalCount] = useState<number | null>(null);
-  const [filteredCount, setFilteredCount] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
+  const [counts, setCounts] = useState<Record<string, number | null>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchCounts({
-      base: 'runners',
-      query: [
-        { property: 'state', operator: QueryOperator.EQ, value: 'active' },
-      ],
-    }).then(({ totalCount, filteredCount }) => {
-      setTotalCount(totalCount);
-      setFilteredCount(filteredCount);
-    });
+    const loadCounts = async () => {
+      try {
+        setCounts(await fetchStateCounts());
+      } catch {
+        setError('Failed to load state counts.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCounts();
   }, []);
+
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <Stack spacing={2} flex={1}>
-      <p>Total Count: {totalCount}</p>
-      <p>Filtered Count: {filteredCount}</p>
-      <RunnersDataGrid />
+      <Stack direction="row" gap={1}>
+        {states.map(({ label, color, key }) => (
+          <CountCard
+            key={key}
+            label={label}
+            value={counts[key]}
+            color={color}
+            loading={loading}
+            onClick={() => setSearch(key)}
+          />
+        ))}
+      </Stack>
+      {loading ? (
+        <Skeleton variant="rectangular" width="100%" height={400} />
+      ) : (
+        <RunnersDataGrid externalSearchParam={search} />
+      )}
     </Stack>
+  );
+}
+
+export const fetchStateCounts = async () => {
+  const states = ['active', 'idle', 'offline', 'failed'] as const;
+  const counts: Record<(typeof states)[number], number | null> = {
+    active: null,
+    idle: null,
+    offline: null,
+    failed: null,
+  };
+
+  for (const state of states) {
+    try {
+      const { filteredCount } = await fetchCounts({
+        base: 'runners',
+        query: [
+          { property: 'state', operator: QueryOperator.EQ, value: state },
+        ],
+      });
+      counts[state] = filteredCount;
+    } catch {
+      counts[state] = null; // Při selhání se nastaví hodnota na `null`.
+    }
+  }
+
+  return counts;
+};
+
+function CountCard({
+  label,
+  value,
+  color,
+  loading,
+  onClick,
+}: {
+  label: string;
+  value: number | null;
+  color: string;
+  loading: boolean;
+  onClick?: any;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  const textColor = hovered ? 'black' : color;
+  const bgColor = hovered ? color : 'white';
+
+  return (
+    <Stack
+      component={Card}
+      alignItems="center"
+      justifyContent="center"
+      style={{
+        padding: '8px',
+        color: textColor,
+        backgroundColor: bgColor,
+        flex: 1,
+        cursor: 'pointer',
+        transition: 'background-color 0.3s',
+      }}
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Stack alignItems="center" justifyContent="center">
+        <LoadingTypography
+          loading={loading}
+          text={label}
+          variant="h6"
+          fontWeight="bold"
+        />
+        <LoadingTypography
+          loading={loading}
+          text={value ?? 'N/A'}
+          variant="h4"
+          fontWeight="bold"
+        />
+      </Stack>
+    </Stack>
+  );
+}
+
+interface LoadingTypographyProps {
+  loading: boolean;
+  text?: string | number;
+  variant?: string;
+  width?: number | string;
+  height?: number | string;
+  fontWeight?: string;
+}
+
+export function LoadingTypography({
+  loading,
+  text = '',
+  variant = 'body1',
+  width = 80,
+  height = 24,
+  fontWeight = 'normal',
+}: LoadingTypographyProps) {
+  return loading ? (
+    <Skeleton variant="text" width={width} height={height} />
+  ) : (
+    <Typography variant={variant} fontWeight={fontWeight}>
+      {text}
+    </Typography>
   );
 }

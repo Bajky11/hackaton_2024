@@ -1,8 +1,9 @@
 import { Paper, Stack } from '@mui/material';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
+import { Metric } from '@/services/runner';
 
-export function MemoryUsageHistory({ data }) {
+export function MemoryUsageHistory({ data }: { data: Metric[] }) {
   const memorySeries = data.map((item) => item.memory / (1024 * 1024)); // Paměť v MB
 
   return (

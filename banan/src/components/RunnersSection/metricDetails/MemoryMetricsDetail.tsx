@@ -7,7 +7,7 @@ export function MemoryMetricsDetail({ data }: MetricsDetailProps) {
 
   return (
     <MetricsDetailCard>
-      <MemoryUsageHistory data={data} />
+      <MemoryUsageHistory data={data.metrics} />
     </MetricsDetailCard>
   );
 }

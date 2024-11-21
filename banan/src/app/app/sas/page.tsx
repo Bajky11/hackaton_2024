@@ -7,7 +7,7 @@ import Link from 'next/link';
 function SASList() {
   const { data: sasList, isLoading, error } = useGetSASListQuery();
 
-  if (isLoading) return <Typography>Načítání...</Typography>;
+  if (isLoading || !sasList) return <Typography>Načítání...</Typography>;
   if (error) return <Typography>Chyba při načítání dat</Typography>;
 
   return (

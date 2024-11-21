@@ -24,8 +24,8 @@ type NotificationsContextType = {
 
 const NotificationsContext = createContext<NotificationsContextType>({
   notifications: [],
-  clearNotifications: () => { },
-  removeNotification: () => { },
+  clearNotifications: () => {},
+  removeNotification: () => {},
 });
 
 type NotificationsProviderProps = {
@@ -35,20 +35,26 @@ type NotificationsProviderProps = {
 export const NotificationsProvider: React.FC<NotificationsProviderProps> = ({
   children,
 }) => {
-  const { data: failedAutomations, isLoading } =
-    useGetFailedAutomationListQuery();
+  const {
+    data: failedAutomations,
+    isLoading,
+    error,
+  } = useGetFailedAutomationListQuery();
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    if (!isLoading && failedAutomations) {
-      const newNotifications = failedAutomations.map((automation) => ({
-        id: uuidv4(),
-        data_id: automation.id,
-        message: `Automatizace ${automation.id} skončila errorem.`,
-      }));
-      setNotifications(newNotifications);
+    if (isLoading || !failedAutomations || !failedAutomations.items || error) {
+      return;
     }
-  }, [failedAutomations, isLoading]);
+
+    const newNotifications = failedAutomations.items.map((automation) => ({
+      id: uuidv4(),
+      data_id: automation.id,
+      message: `Automatizace ${automation.id} skončila errorem.`,
+    }));
+
+    setNotifications(newNotifications);
+  }, [failedAutomations, isLoading, error]);
 
   const clearNotifications = () => {
     setNotifications([]);

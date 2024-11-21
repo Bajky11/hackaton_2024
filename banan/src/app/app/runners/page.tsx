@@ -5,6 +5,7 @@ import RunnersDataGrid from '@/components/dataGrids/RunnersDataGrid';
 import { useEffect, useState } from 'react';
 import { fetchCounts } from '@/functions/fetch/fetchCounts';
 import { QueryOperator } from '@/services/settings';
+import { LoadingTypography } from '@/components/LoadingTypography';
 
 const states = [
   { label: 'Active', color: '#4BA43A', key: 'active' },
@@ -58,7 +59,7 @@ export default function Page() {
   );
 }
 
-export const fetchStateCounts = async () => {
+const fetchStateCounts = async () => {
   const states = ['active', 'idle', 'offline', 'failed'] as const;
   const counts: Record<(typeof states)[number], number | null> = {
     active: null,
@@ -134,31 +135,5 @@ function CountCard({
         />
       </Stack>
     </Stack>
-  );
-}
-
-interface LoadingTypographyProps {
-  loading: boolean;
-  text?: string | number;
-  variant?: string;
-  width?: number | string;
-  height?: number | string;
-  fontWeight?: string;
-}
-
-export function LoadingTypography({
-  loading,
-  text = '',
-  variant = 'body1',
-  width = 80,
-  height = 24,
-  fontWeight = 'normal',
-}: LoadingTypographyProps) {
-  return loading ? (
-    <Skeleton variant="text" width={width} height={height} />
-  ) : (
-    <Typography variant={variant} fontWeight={fontWeight}>
-      {text}
-    </Typography>
   );
 }

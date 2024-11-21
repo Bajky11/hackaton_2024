@@ -56,6 +56,7 @@ const RunnersDataGrid = ({
       data: runnerList = [],
       isLoading,
       error,
+      // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useGetRunnerListQuery({ search, limit: 20 });
 
     if (isLoading) return [];

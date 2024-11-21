@@ -1,4 +1,3 @@
-import { Stack } from '@mui/material';
 import { CpuUsageHistory } from '@/components/RunnersSection/graphs/CpuUsageHistory';
 import { CpuUsageCurrent } from '@/components/RunnersSection/graphs/CpuUsageCurrent';
 import { MetricsDetailProps } from '@/components/RunnersSection/metricDetails/types';
@@ -9,8 +8,8 @@ export function CpuMetricsDetail({ data }: MetricsDetailProps) {
 
   return (
     <MetricsDetailCard>
-      <CpuUsageCurrent data={data} />
-      <CpuUsageHistory data={data} />
+      <CpuUsageCurrent data={data.metrics} />
+      <CpuUsageHistory data={data.metrics} />
     </MetricsDetailCard>
   );
 }

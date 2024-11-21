@@ -1,8 +1,9 @@
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import { Paper, Stack } from '@mui/material';
+import { Metric } from '@/services/runner';
 
-export function CpuUsageCurrent({ data }) {
+export function CpuUsageCurrent({ data }: { data: Metric[] }) {
   const maxCpu = 100;
   const lastCpuValue = data[data.length - 1].cpu * 100;
   const utilizedCpu = (lastCpuValue / maxCpu) * 100;

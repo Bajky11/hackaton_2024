@@ -52,7 +52,7 @@ const NotificationsMenu = () => {
                   cursor: 'pointer',
                 }}
                 onClick={() => {
-                  router.push(`/app/automations/${notification.id}`);
+                  router.push(`/app/automations/${notification.data_id}`);
                   handleClose(); // Zavře menu po kliknutí na text
                 }}
               >

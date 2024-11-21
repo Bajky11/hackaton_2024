@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 type Notification = {
   id: string;
+  data_id: string;
   message: string;
 };
 
@@ -23,8 +24,8 @@ type NotificationsContextType = {
 
 const NotificationsContext = createContext<NotificationsContextType>({
   notifications: [],
-  clearNotifications: () => {},
-  removeNotification: () => {},
+  clearNotifications: () => { },
+  removeNotification: () => { },
 });
 
 type NotificationsProviderProps = {
@@ -42,6 +43,7 @@ export const NotificationsProvider: React.FC<NotificationsProviderProps> = ({
     if (!isLoading && failedAutomations) {
       const newNotifications = failedAutomations.map((automation) => ({
         id: uuidv4(),
+        data_id: automation.id,
         message: `Automatizace ${automation.id} skončila errorem.`,
       }));
       setNotifications(newNotifications);

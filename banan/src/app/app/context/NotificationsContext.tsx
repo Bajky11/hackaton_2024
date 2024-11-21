@@ -47,8 +47,6 @@ export const NotificationsProvider: React.FC<NotificationsProviderProps> = ({
       return;
     }
 
-    console.log(failedAutomations);
-
     const newNotifications = failedAutomations.items.map((automation) => ({
       id: uuidv4(),
       data_id: automation.id,

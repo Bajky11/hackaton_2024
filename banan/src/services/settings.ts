@@ -33,7 +33,7 @@ export enum QueryOperator {
   END = 'end',
 }
 
-interface QueryFilter {
+export interface QueryFilter {
   property: string;
   operator: QueryOperator;
   value: string | number;

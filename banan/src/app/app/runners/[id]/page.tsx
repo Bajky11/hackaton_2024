@@ -2,17 +2,15 @@
 
 import { Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import {
-  useGetJobListQuery,
-  useGetMetricWithRunnerDetailQuery,
-} from '@/services/runner';
+import { useGetMetricWithRunnerDetailQuery } from '@/services/runner';
 import { useParams } from 'next/navigation';
 import { MetricsCard } from '@/components/RunnersSection/MetricsCard';
 import { CpuMetricsDetail } from '@/components/RunnersSection/metricDetails/CpuMetricsDetail';
 import { MemoryMetricsDetail } from '@/components/RunnersSection/metricDetails/MemoryMetricsDetail';
 import { NetworkMetricsDetail } from '@/components/RunnersSection/metricDetails/NetworkMetricsDetail';
 import { DiskMetricsDetail } from '@/components/RunnersSection/metricDetails/DiskMetricsDetail';
-import { JobsTable } from '@/components/tables/JobsTable';
+import JobsDataGrid from '@/components/dataGrids/JobsDataGrid';
+import { QueryFilter, QueryOperator } from '@/services/settings';
 
 export default function Page() {
   const [selectedMetric, setSelectedMetric] = useState<string | null>('cpu');
@@ -23,21 +21,8 @@ export default function Page() {
     isLoading,
   } = useGetMetricWithRunnerDetailQuery(id);
 
-  console.log(id);
-
-  const {
-    data: runnerJobsData,
-    error: runnerJobsError,
-    isLoading: isRunnerJobsLoading,
-  } = useGetJobListQuery({ search: id, limit: 10 });
-
   if (error) return <Typography>Chyba při načítání dat</Typography>;
   if (isLoading || !runnerDetailData || !runnerDetailData.metrics) {
-    return <Typography>Loading...</Typography>;
-  }
-
-  if (runnerJobsError) return <Typography>Chyba při načítání dat</Typography>;
-  if (isRunnerJobsLoading || !runnerJobsData) {
     return <Typography>Loading...</Typography>;
   }
 
@@ -103,6 +88,12 @@ export default function Page() {
     }
   }
 
+  const selectedRunnerQuery: QueryFilter = {
+    property: 'runner',
+    operator: QueryOperator.EQ,
+    value: id,
+  };
+
   return (
     <Stack gap={2}>
       <Stack direction="row" gap={1}>
@@ -118,7 +109,7 @@ export default function Page() {
         ))}
       </Stack>
       {displaySelectedMetrics()}
-      <JobsTable data={runnerJobsData} />
+      <JobsDataGrid query={[selectedRunnerQuery]} navigate={false} />
     </Stack>
   );
 }

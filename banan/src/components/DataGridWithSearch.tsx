@@ -46,7 +46,7 @@ const DataGridWithSearch: React.FC<DataGridWithSearchProps> = ({
         <TextField
           sx={{ flexGrow: 1 }}
           size={'small'}
-          label="Search everything in table..."
+          label="(LUPA) Search everything in table..."
           value={searchParam}
           onChange={(e) => setSearchParam(e.target.value)}
         />

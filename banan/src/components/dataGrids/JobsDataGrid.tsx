@@ -59,7 +59,7 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
 
   return (
     <DataGridWithSearch
-      heading={'Jobs'}
+      heading={'Running Jobs'}
       fetchData={fetchData}
       columns={columns}
       onRowClick={handleRowClick}

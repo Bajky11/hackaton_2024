@@ -14,7 +14,7 @@ import { QueryFilter, QueryOperator } from '@/services/settings';
 
 export default function Page() {
   const [selectedMetric, setSelectedMetric] = useState<string | null>('cpu');
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
   const {
     data: runnerDetailData,
     error,
@@ -72,16 +72,16 @@ export default function Page() {
   function displaySelectedMetrics() {
     switch (selectedMetric) {
       case 'cpu': {
-        return <CpuMetricsDetail data={runnerDetailData.metrics} />;
+        return <CpuMetricsDetail data={runnerDetailData} />;
       }
       case 'memory': {
-        return <MemoryMetricsDetail data={runnerDetailData.metrics} />;
+        return <MemoryMetricsDetail data={runnerDetailData} />;
       }
       case 'network': {
-        return <NetworkMetricsDetail data={runnerDetailData.metrics} />;
+        return <NetworkMetricsDetail data={runnerDetailData} />;
       }
       case 'disk': {
-        return <DiskMetricsDetail data={runnerDetailData.metrics} />;
+        return <DiskMetricsDetail data={runnerDetailData} />;
       }
       default:
         return null;

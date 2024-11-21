@@ -69,7 +69,10 @@ export const runnerApi = createApi({
     getJobDetail: builder.query<Job, string>({
       query: (id) => `jobs/${id}`,
     }),
-    getMetricWithRunnerList: builder.query<MetricWithRunner[], void | Partial<UrlParams>>({
+    getMetricWithRunnerList: builder.query<
+      MetricWithRunner[],
+      void | Partial<UrlParams>
+    >({
       query: (params: UrlParams = {}) => {
         return urlParamsBuilder({ base: 'metrics', ...params });
       },
@@ -78,7 +81,7 @@ export const runnerApi = createApi({
       query: (runnerId) => `metrics/${runnerId}`,
     }),
     getSasList: builder.query<SAS[], void>({
-      query: () => `sas`,
+      query: () => 'sas',
     }),
   }),
 });
@@ -98,5 +101,6 @@ export const selectAllJobs = runnerApi.endpoints.getJobList.select();
 
 export const selectSuccessfulJobs = createSelector(
   [selectAllJobs],
-  (jobList) => jobList?.data?.filter((job) => job.state === JobState.SUCCESS) || []
+  (jobList) =>
+    jobList?.data?.filter((job) => job.state === JobState.SUCCESS) || [],
 );

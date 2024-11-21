@@ -1,8 +1,9 @@
 import { Paper, Stack } from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { Metric } from '@/services/runner';
 
-export function NetworkTransmitHistory({ data }) {
+export function NetworkTransmitHistory({ data }: { data: Metric[] }) {
   const networkTransmitSeries = data.map((item) =>
     Number(item.network_transmit),
   );

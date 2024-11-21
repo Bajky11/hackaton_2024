@@ -1,8 +1,9 @@
 import { Paper, Stack } from '@mui/material';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
+import { Metric } from '@/services/runner';
 
-export function DiskReadsHistory({ data }) {
+export function DiskReadsHistory({ data }: { data: Metric[] }) {
   const fsReadsSeries = data.map((item) => Number(item.fs_reads));
 
   return (

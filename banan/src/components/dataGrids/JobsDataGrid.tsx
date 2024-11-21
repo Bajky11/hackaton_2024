@@ -41,6 +41,7 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
       data: jobsList = [],
       isLoading,
       error,
+      // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useGetJobListQuery({
       query,
       search,

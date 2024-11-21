@@ -1,8 +1,9 @@
 import { Paper, Stack } from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { Metric } from '@/services/runner';
 
-export function NetworkRecieveHistory({ data }) {
+export function NetworkRecieveHistory({ data }: { data: Metric[] }) {
   const networkReceiveSeries = data.map((item) => Number(item.network_receive));
   console.log(networkReceiveSeries);
 

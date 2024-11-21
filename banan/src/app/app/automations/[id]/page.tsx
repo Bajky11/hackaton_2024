@@ -17,7 +17,8 @@ import StateDiagram from '@/components/automations/StateDiagram';
 import { getStateColor } from '@/services/automation';
 
 const AutomationDetail: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
+
   const { data: automationDetail, isLoading: isDetailLoading } =
     useGetAutomationDetailQuery(id);
 

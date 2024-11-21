@@ -1,6 +1,6 @@
 import React from 'react';
 import { GridColDef } from '@mui/x-data-grid';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useGetRunnerListQuery } from '@/services/runner';
 import DataGridWithSearch from '@/components/DataGridWithSearch';
 
@@ -23,7 +23,7 @@ const RunnersDataGrid = ({ navigate = true }: RunnersDataGridProps) => {
       data: runnerList = [],
       isLoading,
       error,
-    } = useGetRunnerListQuery({ search });
+    } = useGetRunnerListQuery({ search, limit: 20 });
 
     if (isLoading) return [];
     if (error) return [];

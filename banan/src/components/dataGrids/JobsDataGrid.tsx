@@ -30,6 +30,7 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
     } = useGetJobListQuery({
       query,
       search,
+      limit: 30,
     });
 
     if (isLoading) return [];

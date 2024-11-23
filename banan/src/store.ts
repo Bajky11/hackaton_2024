@@ -5,6 +5,7 @@ import { runnerApi } from './services/runner';
 import appReducer from './slices/app/appReducer';
 import { sasApi } from '@/services/sas';
 import { Middleware } from 'redux';
+import { notificationsApi } from '@/services/notifications';
 
 const loggerMiddleware: Middleware = (storeAPI) => (next) => (action) => {
   console.log('Dispatching action:', action);
@@ -19,6 +20,7 @@ export const store = configureStore({
     [runnerApi.reducerPath]: runnerApi.reducer,
     [sasApi.reducerPath]: sasApi.reducer,
     app: appReducer,
+    [notificationsApi.reducerPath]: notificationsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -27,9 +29,11 @@ export const store = configureStore({
       .concat(automationApi.middleware)
       .concat(runnerApi.middleware)
       .concat(sasApi.middleware)
-      .concat(loggerMiddleware),
+      .concat(loggerMiddleware)
+      .concat(notificationsApi.middleware),
 });
 
 setupListeners(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

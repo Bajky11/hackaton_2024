@@ -4,9 +4,9 @@ import '../styles/globals.css';
 import { Provider } from 'react-redux';
 import { store } from '@/store';
 import React from 'react';
-import Head from 'next/head'; // Správný import pro metadata
+import Head from 'next/head';
 
-function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <Head>

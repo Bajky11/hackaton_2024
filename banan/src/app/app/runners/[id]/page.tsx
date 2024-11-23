@@ -9,7 +9,7 @@ import { CpuMetricsDetail } from '@/components/RunnersSection/metricDetails/CpuM
 import { MemoryMetricsDetail } from '@/components/RunnersSection/metricDetails/MemoryMetricsDetail';
 import { NetworkMetricsDetail } from '@/components/RunnersSection/metricDetails/NetworkMetricsDetail';
 import { DiskMetricsDetail } from '@/components/RunnersSection/metricDetails/DiskMetricsDetail';
-import JobsDataGrid from '@/components/dataGrids/JobsDataGrid';
+import JobsDataGrid from '@/components/tables/JobsTable/JobsDataGrid';
 import { QueryFilter, QueryOperator } from '@/services/settings';
 
 export default function Page() {

@@ -1,8 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
+import { v4 as uuidv4 } from 'uuid';
 
 export type Notification = {
+  unique_id: string;
   id: string; // Unikátní ID
   type: 'automation' | 'user-action' | 'system'; // Typ notifikace
   message: string; // Zpráva k zobrazení
@@ -26,9 +28,10 @@ export const notificationsApi = createApi({
       }),
       transformResponse: (response: any[], meta) => {
         const notifications = response.map((item) => ({
+          unique_id: uuidv4(),
           id: item.id,
           type: item.type,
-          message: item.message || `Automation id ${item.type} failed`,
+          message: item.message || `Automation id ${item.id} failed`,
           link: item.link || `/app/automations/${item.id}`,
         }));
 

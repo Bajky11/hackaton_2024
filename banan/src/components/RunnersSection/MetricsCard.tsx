@@ -20,11 +20,12 @@ export function MetricsCard({
 
   const headingTextColor = hovered ? 'black' : selected ? 'black' : color;
   const valueTextColor = hovered ? 'black' : selected ? 'black' : '#3F3F3F';
-  const backgroundColor = hovered ? color : selected ? color : 'white';
+  const backgroundColor = hovered ? color : selected ? color : '#F6F6F6';
 
   return (
     <Stack
-      component={Card}
+      border={'0.5px solid #D7D7D7'}
+      borderRadius={1}
       alignItems={'center'}
       justifyContent={'center'}
       onClick={onClick}

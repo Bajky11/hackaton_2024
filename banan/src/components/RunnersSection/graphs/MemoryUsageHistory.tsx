@@ -7,12 +7,20 @@ export function MemoryUsageHistory({ data }: { data: Metric[] }) {
   const memorySeries = data.map((item) => item.memory / (1024 * 1024)); // Paměť v MB
 
   return (
-    <Stack component={Paper} p={1} maxHeight={300} flex={1}>
+    <Stack
+      p={1}
+      maxHeight={300}
+      flex={1}
+      bgcolor={'#F6F6F6'}
+      border={'0.5px solid #D7D7D7'}
+      borderRadius={1}
+    >
       <HighchartsReact
         highcharts={Highcharts}
         options={{
           chart: {
             type: 'area',
+            backgroundColor: '#F6F6F6',
           },
           title: {
             text: '',

@@ -8,12 +8,21 @@ export function NetworkRecieveHistory({ data }: { data: Metric[] }) {
   console.log(networkReceiveSeries);
 
   return (
-    <Stack component={Paper} p={1} maxHeight={300} flex={1} gap={10}>
+    <Stack
+      p={1}
+      maxHeight={300}
+      flex={1}
+      gap={10}
+      bgcolor={'#F6F6F6'}
+      border={'0.5px solid #D7D7D7'}
+      borderRadius={1}
+    >
       <HighchartsReact
         highcharts={Highcharts}
         options={{
           chart: {
             type: 'area',
+            backgroundColor: '#F6F6F6',
           },
           title: {
             text: 'Síťový Přenos - Přijato',

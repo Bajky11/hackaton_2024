@@ -7,12 +7,21 @@ export function CpuUsageHistory({ data }: { data: Metric[] }) {
   const cpuSeries = data.map((item) => item.cpu * 100);
 
   return (
-    <Stack component={Paper} p={1} width={600} height={300} flex={2}>
+    <Stack
+      p={1}
+      width={600}
+      height={300}
+      flex={2}
+      bgcolor={'#F6F6F6'}
+      border={'0.5px solid #D7D7D7'}
+      borderRadius={1}
+    >
       <HighchartsReact
         highcharts={Highcharts}
         options={{
           chart: {
             type: 'area',
+            backgroundColor: '#F6F6F6',
           },
           title: {
             text: '',

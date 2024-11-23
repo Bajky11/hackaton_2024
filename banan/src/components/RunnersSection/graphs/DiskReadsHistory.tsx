@@ -7,12 +7,21 @@ export function DiskReadsHistory({ data }: { data: Metric[] }) {
   const fsReadsSeries = data.map((item) => Number(item.fs_reads));
 
   return (
-    <Stack component={Paper} p={1} flex={1} maxHeight={300}>
+    <Stack
+      p={1}
+      flex={1}
+      maxHeight={300}
+      bgcolor={'#F6F6F6'}
+      border={'0.5px solid #D7D7D7'}
+      borderRadius={1}
+      $
+    >
       <HighchartsReact
         highcharts={Highcharts}
         options={{
           chart: {
             type: 'area',
+            backgroundColor: '#F6F6F6',
           },
           title: {
             text: 'I/O Operace - Zápisy',

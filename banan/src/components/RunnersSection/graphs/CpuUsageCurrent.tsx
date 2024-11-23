@@ -1,10 +1,17 @@
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
-import { Paper, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Metric } from '@/services/runner';
-import { CustomCard } from '@/app/app/automationsV2/[id]/page';
+import { useTheme } from '@mui/material/styles';
+import {
+  getBackgroundColor,
+  getBorderColor,
+  getTextColor,
+} from '@/components/RunnersSection/graphs/functions';
 
 export function CpuUsageCurrent({ data }: { data: Metric[] }) {
+  const theme = useTheme();
+
   const maxCpu = 100;
   const lastCpuValue = data[data.length - 1].cpu * 100;
   const utilizedCpu = (lastCpuValue / maxCpu) * 100;
@@ -15,8 +22,8 @@ export function CpuUsageCurrent({ data }: { data: Metric[] }) {
       p={1}
       maxHeight={300}
       flex={1}
-      bgcolor={'#F6F6F6'}
-      border={'0.5px solid #D7D7D7'}
+      bgcolor={getBackgroundColor(theme)}
+      border={getBorderColor(theme)}
       borderRadius={1}
     >
       <HighchartsReact
@@ -24,7 +31,7 @@ export function CpuUsageCurrent({ data }: { data: Metric[] }) {
         options={{
           chart: {
             type: 'pie',
-            backgroundColor: '#F6F6F6',
+            backgroundColor: getBackgroundColor(theme),
           },
           title: {
             text: '',
@@ -59,7 +66,7 @@ export function CpuUsageCurrent({ data }: { data: Metric[] }) {
             style: {
               fontSize: '32px',
               fontWeight: 'bold',
-              color: 'black',
+              color: getTextColor(theme),
             },
           },
         }}

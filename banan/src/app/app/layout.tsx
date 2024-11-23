@@ -76,7 +76,17 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           toolbarActions: UserSection,
         }}
       >
-        <Box px={8}>{children}</Box>
+        <Box
+          px={{
+            xs: 2, // Extra small screens
+            sm: 4, // Small screens
+            md: 6, // Medium screens
+            lg: 8, // Large screens
+            xl: 10, // Extra large screens
+          }}
+        >
+          {children}
+        </Box>
       </DashboardLayout>
     </AppProvider>
   );

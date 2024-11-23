@@ -31,6 +31,7 @@ import {
 import * as React from 'react';
 import CustomAccordion from '@/components/automationsV2/CustomAccordion';
 import HorizontalTimeline from '@/components/automationsV2/HorizontalTimeline';
+import { useTheme } from '@mui/material/styles';
 
 export default function AutomationDetail() {
   const { id } = useParams() as { id: string };
@@ -116,7 +117,10 @@ function AutomationScheme({ automationData }: AutomationSchemeProps) {
         Automation scheme
       </Typography>
       <CustomCard>
-        <HorizontalTimeline items={automationType.states} state={automationData.state} />
+        <HorizontalTimeline
+          items={automationType.states}
+          state={automationData.state}
+        />
       </CustomCard>
     </Stack>
   );
@@ -138,14 +142,18 @@ function AutomationProcess({ automationLogs }: AutomationProcessProps) {
 }
 
 export function CustomCard({ children }: { children: React.ReactNode }) {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
-        backgroundColor: '#F6F6F6',
-        border: '0.5px solid #D7D7D7',
+        backgroundColor: theme.palette.mode === 'light' ? '#F6F6F6' : '#111111',
+        border: `0.5px solid ${
+          theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'
+        }`,
         borderRadius: '16px',
         maxWidth: '100%',
-          padding: 2,
+        padding: 2,
       }}
     >
       {children}

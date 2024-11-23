@@ -5,7 +5,6 @@ export const columns: GridColDef[] = [
   {
     field: 'favorite',
     headerName: 'Favorite',
-
     renderCell: (params) => {
       return (
         <FavoriteCell

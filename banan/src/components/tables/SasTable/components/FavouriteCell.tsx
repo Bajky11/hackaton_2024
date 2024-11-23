@@ -20,7 +20,7 @@ export const FavoriteCell = ({
   const [loading, setLoading] = useState(false);
   const user = useSelector((state: RootState) => state.app.auth.user);
 
-  if (!user) return 'loading';
+  if (!user) return 'Loading favorite items..';
 
   const handleFavoriteToggle = async () => {
     setLoading(true);

@@ -34,6 +34,7 @@ const SasTable = () => {
         .catch((error) => console.error('Failed to load favorites:', error))
         .finally(() => setLoading(false));
     }
+    setLoading(false); // TODO: if user is not logged in loading runs indefinitely
   }, [user]);
 
   const rows = sasList

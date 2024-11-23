@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import { getStateColor } from '@/services/automation';
 
-const HorizontalTimeline = ({ items }) => {
+const HorizontalTimeline = ({ items, state }) => {
   const lineColor = '#424242';
   const minWidth = items.length * 220; // muze být podle nejdelšího slova
   return (
@@ -106,7 +107,11 @@ const HorizontalTimeline = ({ items }) => {
               height: 24,
               borderRadius: '50%',
               transform: 'translateX(-50%)',
-              border: '2px solid #424242',
+              border: `2px solid ${
+                items[index] === state ? getStateColor(state) : '#424242'
+              }`,
+              backgroundColor:
+                items[index] === state ? getStateColor(state) : 'transparent',
             }}
           />
 

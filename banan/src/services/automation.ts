@@ -36,10 +36,12 @@ export type Transition = {
 };
 
 export const stateColors: { [key: string]: string } = {
-  FINISHED: '#4CAF50', // Green
-  RETRY_CHOICE: '#FF9800', // Orange
-  FAILED: '#F44336', // Red
-  DEFAULT: '#1976D2', // Blue for other states
+  FINISHED: '#4CAF50',
+  RETRY_CHOICE: '#FF9800',
+  FAILED: '#F44336',
+  ERROR: '#F44336',
+  DEFAULT: '#1976D2',
+  WARNING: '#FF5F15',
 };
 
 // Funkce pro získání barvy podle stavu

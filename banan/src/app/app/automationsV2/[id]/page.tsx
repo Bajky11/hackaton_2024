@@ -50,7 +50,7 @@ export default function AutomationDetail() {
     return 'Loading...';
 
   return (
-    <Stack spacing={1.5} flex={1}>
+    <Stack spacing={1.5} flex={1} padding={2}>
       <AutomationDetails automationData={automationData} />
       <AutomationScheme automationData={automationData} />
       <AutomationProcess automationLogs={automationLogs} />
@@ -116,7 +116,7 @@ function AutomationScheme({ automationData }: AutomationSchemeProps) {
         Automation scheme
       </Typography>
       <CustomCard>
-        <HorizontalTimeline items={automationType.states} />
+        <HorizontalTimeline items={automationType.states} state={automationData.state} />
       </CustomCard>
     </Stack>
   );
@@ -144,9 +144,8 @@ export function CustomCard({ children }: { children: React.ReactNode }) {
         backgroundColor: '#F6F6F6',
         border: '0.5px solid #D7D7D7',
         borderRadius: '16px',
-        overflow: 'auto',
-        flexGrow: 1,
         maxWidth: '100%',
+          padding: 2,
       }}
     >
       {children}

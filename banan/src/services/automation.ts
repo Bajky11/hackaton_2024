@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
-import { type } from 'os';
 
 export type Automation = {
   id: string;

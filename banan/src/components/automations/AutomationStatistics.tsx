@@ -38,7 +38,7 @@ const AutomationStatistics: React.FC = () => {
       let successCount = 0;
       let failureCount = 0;
 
-      automationList.items.forEach((automation) => {
+      automationList?.forEach((automation) => {
         // Počet podle stavu
         stateCounter[automation.state] =
           (stateCounter[automation.state] || 0) + 1;

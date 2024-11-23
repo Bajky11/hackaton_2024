@@ -4,33 +4,37 @@ import * as React from 'react';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { createTheme } from '@mui/material/styles';
-import MotionPhotosAutoIcon from '@mui/icons-material/MotionPhotosAuto';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import AppsIcon from '@mui/icons-material/Apps';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { usePathname, useRouter } from 'next/navigation';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import PrecisionManufacturingRoundedIcon from '@mui/icons-material/PrecisionManufacturingRounded';
+import EngineeringRoundedIcon from '@mui/icons-material/EngineeringRounded';
+import { Box } from '@mui/material';
+import UserSection from '@/components/UserSection/UserSection';
 
 const NAVIGATION: Navigation = [
   {
     segment: 'app/dashboard',
     title: 'Dashboard',
-    icon: <DashboardIcon />,
+    icon: <DashboardRoundedIcon />,
+  },
+  {
+    kind: 'divider',
   },
   {
     segment: 'app/sas',
     title: 'SAS',
-    icon: <AppsIcon />,
+    icon: <Inventory2RoundedIcon />,
   },
   {
     segment: 'app/runners',
     title: 'Runners',
-    icon: <LeaderboardIcon />,
+    icon: <EngineeringRoundedIcon />,
   },
   {
     segment: 'app/automationsV2',
     title: 'Automations',
-    icon: <MotionPhotosAutoIcon />,
+    icon: <PrecisionManufacturingRoundedIcon />,
   },
 ];
 
@@ -67,7 +71,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       }}
       theme={demoTheme}
     >
-      <DashboardLayout>{children}</DashboardLayout>
+      <DashboardLayout
+        slots={{
+          toolbarActions: UserSection,
+        }}
+      >
+        <Box px={8}>{children}</Box>
+      </DashboardLayout>
     </AppProvider>
   );
 }

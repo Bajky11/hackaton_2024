@@ -119,7 +119,7 @@ export const urlParamsBuilder = ({
 
   if (query) {
     query.forEach(({ property, operator, value }) => {
-      params.append(`${property}_${operator}`, value.toString());
+      params.append(`${property}_${operator}`, value.toString().trim());
     });
   }
 

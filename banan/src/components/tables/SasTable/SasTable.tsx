@@ -5,7 +5,7 @@ import { Stack, Typography } from '@mui/material';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { useRouter } from 'next/navigation';
-import { columns } from '@/components/tables/AutomationsTable/constant';
+import { columns } from '@/components/tables/SasTable/constants';
 import { useGetSASListQuery } from '@/services/sas';
 
 const SasTable = () => {
@@ -29,7 +29,7 @@ const SasTable = () => {
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} padding={2}>
       <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
         <Typography fontSize={30} fontWeight={'bold'} pr={2}>
           Sas Table

@@ -29,11 +29,8 @@ import {
 } from '@mui/lab';
 
 import * as React from 'react';
-import { formatTimestamp } from '@/functions/date/formatTimestamp';
 import CustomAccordion from '@/components/automationsV2/CustomAccordion';
-import { Chrono } from 'react-chrono';
 import HorizontalTimeline from '@/components/automationsV2/HorizontalTimeline';
-import ExampleComponent from '@/components/automationsV2/ExampleComponent';
 
 export default function AutomationDetail() {
   const { id } = useParams() as { id: string };

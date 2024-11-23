@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import { QueryOperator } from '@/services/settings';
 import { useGetAutomationListQuery } from '@/services/automation';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, useMediaQuery } from '@mui/material';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/TableComboBox';
 import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { useRouter } from 'next/navigation';
 import { columns } from '@/components/tables/AutomationsTable/constant';
 import { useGetSASListQuery } from '@/services/sas';
+import { useGetAutomationTypeListQuery } from '@/services/automation';
 
 const AutomationsTable = () => {
   const router = useRouter();
@@ -17,6 +18,8 @@ const AutomationsTable = () => {
   const [typeComboBoxValue, setTypeComboBoxValue] = useState('');
   const [sasComboBoxValue, setSasComboBoxValue] = useState('');
   const [stateComboBoxValue, setStateComboBoxValue] = useState('');
+
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const {
     data: automationsList = [],
@@ -50,27 +53,39 @@ const AutomationsTable = () => {
     ].filter(Boolean),
   });
 
+  console.log('Automations List:', automationsList);
+
   const {
     data: sasList,
     isLoading: isSasListLoading,
     error: sasListError,
   } = useGetSASListQuery();
 
+  console.log('SAS List:', sasList);
+
+  const {
+    data: typeList,
+    isLoading: isTypeListLoading,
+    error: typeListError,
+  } = useGetAutomationTypeListQuery();
+
+  console.log('Type List:', typeList);
+
   if (isAutomationsListLoading || isSasListLoading) return 'loading';
   if (automationsListError || sasListError) return 'error';
 
   const handleRowClick = (row: any) => {
+    console.log('Row clicked:', row);
     router.push(`/app/automationsV2/${row.id}`);
   };
 
-  // TODO - Doplnit ComboBoxy typ, state
-  // TODO - tabulka házi chyby protože ID jsou hodně stejná
   return (
-    <Stack spacing={2}>
-      <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
-        <Typography fontSize={30} fontWeight={'bold'} pr={2}>
-          Automations Table
-        </Typography>
+    <Stack spacing={2} padding={2}>
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        spacing={2}
+        justifyContent={'flex-end'}
+      >
         <TableSearchField
           value={searchValue}
           setValue={setSearchValue}
@@ -79,8 +94,9 @@ const AutomationsTable = () => {
         <TableComboBox
           value={typeComboBoxValue}
           setValue={setTypeComboBoxValue}
-          options={['TODO']}
+          options={typeList?.map((item) => item.type) || []}
           label={'Type'}
+          flex={2}
         />
         <TableComboBox
           value={sasComboBoxValue}
@@ -92,12 +108,13 @@ const AutomationsTable = () => {
         <TableComboBox
           value={stateComboBoxValue}
           setValue={setStateComboBoxValue}
-          options={['TODO']}
+          options={[...new Set(typeList?.flatMap((item) => item.states) || [])]}
           label={'State'}
+          flex={2}
         />
       </Stack>
       <StyledResponsiveDataGrid
-        rows={automationsList.items}
+        rows={automationsList}
         columns={columns}
         onRowClick={handleRowClick}
       />

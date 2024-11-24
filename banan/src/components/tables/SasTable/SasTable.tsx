@@ -11,8 +11,10 @@ import { FavoriteCell } from '@/components/tables/SasTable/components/FavouriteC
 import { RootState } from '@/store';
 import { columns } from '@/components/tables/SasTable/constants';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useRouter } from 'next/navigation';
 
 const SasTable = () => {
+  const router = useRouter();
   const user = useSelector((state: RootState) => state.app.auth.user);
   const isMobile = useMediaQuery('(max-width:600px)');
   const [favorites, setFavorites] = useState([]);
@@ -38,6 +40,11 @@ const SasTable = () => {
     }
     setLoading(false); // TODO: if user is not logged in loading runs indefinitely
   }, [user]);
+
+  const handleRowClick = (row: any) => {
+    console.log('Row clicked:', row);
+    router.push(`/app/sas/${row.row.name}`);
+  };
 
   const rows = sasList
     .map((sas, id) => ({
@@ -90,6 +97,7 @@ const SasTable = () => {
               }
             : column,
         )}
+        onRowClick={handleRowClick}
       />
     </Stack>
   );

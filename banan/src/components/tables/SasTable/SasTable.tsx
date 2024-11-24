@@ -10,9 +10,11 @@ import { fetchFavorites } from '@/functions/fetch/fetchFavorites';
 import { FavoriteCell } from '@/components/tables/SasTable/components/FavouriteCell';
 import { RootState } from '@/store';
 import { columns } from '@/components/tables/SasTable/constants';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const SasTable = () => {
   const user = useSelector((state: RootState) => state.app.auth.user);
+  const isMobile = useMediaQuery('(max-width:600px)');
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
@@ -50,7 +52,11 @@ const SasTable = () => {
 
   return (
     <Stack spacing={2} padding={2}>
-      <Stack direction="row" spacing={2} justifyContent="flex-end">
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        spacing={2}
+        justifyContent="flex-end"
+      >
         <Typography fontSize={30} fontWeight="bold" pr={2}>
           Sas Table
         </Typography>

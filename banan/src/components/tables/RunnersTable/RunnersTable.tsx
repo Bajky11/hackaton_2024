@@ -12,9 +12,11 @@ import { RunnerTableStateSearch } from '@/components/tables/RunnersTable/compone
 import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/TableComboBox';
 import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const RunnersTable = () => {
   const router = useRouter();
+  const isMobile = useMediaQuery('(max-width:600px)');
   const [searchValue, setSearchValue] = useState('');
   const [runnerGroupComboBoxValue, setRunnerGroupComboBoxValue] = useState('');
   const [organizationComboBoxValue, setOrganizationComboBoxValue] =
@@ -55,7 +57,11 @@ const RunnersTable = () => {
   return (
     <Stack spacing={2} padding={2}>
       <RunnerTableStateSearch value={searchValue} setValue={setSearchValue} />
-      <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        spacing={2}
+        justifyContent={'flex-end'}
+      >
         <Typography fontSize={30} fontWeight={'bold'} pr={2}>
           Runners Table
         </Typography>

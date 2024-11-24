@@ -49,7 +49,10 @@ function UserMenu() {
         onClose={handleClose}
       >
         <MenuItem
-          onClick={() => setMode(colorScheme === 'dark' ? 'light' : 'dark')}
+          onClick={() => {
+            setMode(colorScheme === 'dark' ? 'light' : 'dark');
+            handleClose();
+          }}
         >
           <Stack direction={'row'} spacing={2} alignItems="center">
             {colorScheme === 'dark' ? (

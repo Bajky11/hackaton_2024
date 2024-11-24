@@ -81,6 +81,9 @@ const AutomationsTable = () => {
 
   return (
     <Stack spacing={2} padding={2}>
+      <Typography fontSize={30} fontWeight={'bold'} pr={2}>
+        Automations Table
+      </Typography>
       <Stack
         direction={isMobile ? 'column' : 'row'}
         spacing={2}

@@ -78,12 +78,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       >
         <Box
           px={{
-            xs: 2, // Extra small screens
+            xs: 0.5, // Extra small screens
             sm: 4, // Small screens
             md: 6, // Medium screens
             lg: 8, // Large screens
             xl: 10, // Extra large screens
           }}
+          p
         >
           {children}
         </Box>

@@ -67,7 +67,7 @@ const grayTypographyAttributes = {
 
 const headingTypographyAttributes = {
   fontSize: 18,
-  fontWeight: 800,
+  fontWeight: 600,
   color: '#727272',
 };
 
@@ -154,6 +154,7 @@ export function CustomCard({ children }: { children: React.ReactNode }) {
         borderRadius: '16px',
         maxWidth: '100%',
         padding: 2,
+        overflowX: 'auto',
       }}
     >
       {children}

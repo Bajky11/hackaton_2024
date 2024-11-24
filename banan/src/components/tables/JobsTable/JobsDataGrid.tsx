@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGetJobListQuery } from '@/services/runner';
-import { QueryFilter, QueryOperator } from '@/services/settings';
+import { QueryFilter } from '@/services/settings';
 import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { columns } from '@/components/tables/JobsTable/constants';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { Stack, useMediaQuery } from '@mui/material';
-import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/TableComboBox';
-import { useGetSASListQuery } from '@/services/sas';
 
 interface JobDataGridRowParams {
   query: QueryFilter[];
@@ -17,7 +15,6 @@ interface JobDataGridRowParams {
 const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
-  const [sasComboBoxValue, setSasComboBoxValue] = useState('');
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const extendedQuery = {
@@ -34,6 +31,10 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
     limit: 30,
   });
 
+  const handleRowClick = (row: any) => {
+    if (navigate) router.push(`/app/jobs/${row.id}`);
+  };
+
   return (
     <Stack spacing={2} padding={2}>
       <Stack
@@ -48,7 +49,11 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
         />
       </Stack>
 
-      <StyledResponsiveDataGrid rows={jobsList} columns={columns} />
+      <StyledResponsiveDataGrid
+        rows={jobsList}
+        columns={columns}
+        onRowClick={handleRowClick}
+      />
     </Stack>
   );
 };

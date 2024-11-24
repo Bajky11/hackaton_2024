@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { login } from '@/functions/auth/login';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/slices/app/parts/auth';
+import Cookies from 'js-cookie';
 
 function LoginPage() {
   const router = useRouter();
@@ -24,6 +25,7 @@ function LoginPage() {
   const handleLogin = () => {
     login(email, password)
       .then((user) => {
+        Cookies.set('user', JSON.stringify(user), { expires: 7 });
         dispatch(setUser(user));
         router.push('/app/dashboard');
       })
@@ -33,6 +35,7 @@ function LoginPage() {
   const handleFastLogin = (email: string, password: string) => {
     login(email, password)
       .then((user) => {
+        Cookies.set('user', JSON.stringify(user), { expires: 7 });
         dispatch(setUser(user));
         router.push('/app/dashboard');
       })
@@ -70,7 +73,7 @@ function LoginPage() {
         </Button>
         <Typography textAlign="center">
           Nemáte účet?
-          <Link component={NextLink} href="/auth/login" color="primary">
+          <Link component={NextLink} href="/auth/register" color="primary">
             Zaregistrujte se
           </Link>
         </Typography>

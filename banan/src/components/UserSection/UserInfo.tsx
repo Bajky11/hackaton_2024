@@ -5,6 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 function UserInfo({ user }: { user: User | null }) {
   const isMobile = useMediaQuery('(max-width:600px)');
   const userName = user ? user.name : 'Hackaton';
+  const userEmail = user ? user.email : '';
 
   return (
     <Stack direction={'row'} gap={1} alignItems={'center'}>
@@ -18,7 +19,7 @@ function UserInfo({ user }: { user: User | null }) {
           >
             {userName}
           </Typography>
-          <Typography fontSize={12}>Admin</Typography>
+          <Typography fontSize={12}>{userEmail}</Typography>
         </Stack>
       )}
     </Stack>

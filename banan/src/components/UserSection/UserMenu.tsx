@@ -16,6 +16,7 @@ import { setUser } from '@/slices/app/parts/auth';
 import { useRouter } from 'next/navigation';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import Cookies from 'js-cookie';
 
 function UserMenu() {
   const router = useRouter();
@@ -34,6 +35,7 @@ function UserMenu() {
 
   const handleLogout = () => {
     dispatch(setUser(null));
+    Cookies.remove('user');
     router.push('/');
   };
 

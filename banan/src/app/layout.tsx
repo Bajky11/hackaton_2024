@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/store';
 import React from 'react';
 import Head from 'next/head';
+import AppInitializer from '@/components/UserSection/AppInitializer';
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,7 +17,10 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         />
       </Head>
       <body>
-        <Provider store={store}>{children}</Provider>
+        <Provider store={store}>
+          <AppInitializer />
+          {children}
+        </Provider>
       </body>
     </html>
   );

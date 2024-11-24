@@ -38,7 +38,6 @@ export default function SasDetailPage(): JSX.Element {
       error,
     } = useGetJobListQuery({
       query: createQueries(id, failure, statistic),
-      limit: 500,
     });
 
     if (isLoading) return NaN;

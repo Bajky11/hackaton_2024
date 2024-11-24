@@ -1,3 +1,5 @@
+'use client';
+
 import { Stack } from '@mui/material';
 import NotificationsMenu from '@/components/UserSection/NotificationMenu';
 import UserInfo from '@/components/UserSection/UserInfo';

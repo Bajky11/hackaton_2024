@@ -29,8 +29,8 @@ import {
 } from '@mui/lab';
 
 import * as React from 'react';
-import CustomAccordion from '@/components/automationsV2/CustomAccordion';
-import HorizontalTimeline from '@/components/automationsV2/HorizontalTimeline';
+import CustomAccordion from '@/components/automations/CustomAccordion';
+import HorizontalTimeline from '@/components/automations/HorizontalTimeline';
 import { useTheme } from '@mui/material/styles';
 
 export default function AutomationDetail() {

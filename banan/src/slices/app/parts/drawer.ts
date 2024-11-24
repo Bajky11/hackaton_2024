@@ -11,7 +11,7 @@ const drawerItems: DrawerItem[] = [
   { name: 'Automations', path: '/app/automations' },
   { name: 'Runners', path: '/app/runners' },
   { name: 'Metrics', path: '/app/metrics' },
-  { name: 'AutomationsV2', path: '/app/automationsV2' },
+  { name: 'Automation2', path: '/app/automations' },
 ];
 
 const initialState = {

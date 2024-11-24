@@ -76,7 +76,7 @@ const AutomationsTable = () => {
 
   const handleRowClick = (row: any) => {
     console.log('Row clicked:', row);
-    router.push(`/app/automationsV2/${row.id}`);
+    router.push(`/app/automations/${row.id}`);
   };
 
   return (

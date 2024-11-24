@@ -32,7 +32,7 @@ const NAVIGATION: Navigation = [
     icon: <EngineeringRoundedIcon />,
   },
   {
-    segment: 'app/automationsV2',
+    segment: 'app/automations',
     title: 'Automations',
     icon: <PrecisionManufacturingRoundedIcon />,
   },

@@ -10,7 +10,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import { formatTimestamp } from '@/functions/date/formatTimestamp';
-import StatusIcon from '@/components/automationsV2/StatusIcon';
+import StatusIcon from '@/components/automations/StatusIcon';
 
 const StyledAccordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />

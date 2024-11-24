@@ -1,36 +1,95 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { Stack } from '@mui/material';
-import Drawer from '@/components/Drawer';
-import Header from '@/components/Header';
-import { Box } from '@mui/system';
-import { header_height } from '@/constants';
+import * as React from 'react';
+import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
+import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+import { createTheme } from '@mui/material/styles';
+import { usePathname, useRouter } from 'next/navigation';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import PrecisionManufacturingRoundedIcon from '@mui/icons-material/PrecisionManufacturingRounded';
+import EngineeringRoundedIcon from '@mui/icons-material/EngineeringRounded';
+import { Box } from '@mui/material';
+import UserSection from '@/components/UserSection/UserSection';
 
-function AppLayout({
-  children,
-}: {
-  children: ReactNode; // Typ ReactNode umožňuje JSX, string, null atd.
-}) {
+const NAVIGATION: Navigation = [
+  {
+    segment: 'app/dashboard',
+    title: 'Dashboard',
+    icon: <DashboardRoundedIcon />,
+  },
+  {
+    kind: 'divider',
+  },
+  {
+    segment: 'app/sas',
+    title: 'SAS',
+    icon: <Inventory2RoundedIcon />,
+  },
+  {
+    segment: 'app/runners',
+    title: 'Runners',
+    icon: <EngineeringRoundedIcon />,
+  },
+  {
+    segment: 'app/automationsV2',
+    title: 'Automations',
+    icon: <PrecisionManufacturingRoundedIcon />,
+  },
+];
+
+const demoTheme = createTheme({
+  cssVariables: {
+    colorSchemeSelector: 'data-toolpad-color-scheme',
+  },
+  colorSchemes: { light: true, dark: true },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 600,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+});
+
+function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
+
   return (
-    <Stack direction={'row'} sx={{ height: '100vh' }}>
-      <Drawer />
-      <Stack direction={'column'} flex={1} p={1} gap={1}>
-        <Box px={1}>
-          <Header />
-        </Box>
+    <AppProvider
+      navigation={NAVIGATION}
+      branding={{
+        logo: <img src="/snap_logo.png" alt="App logo" />,
+        title: 'SNAP',
+      }}
+      router={{
+        pathname,
+        navigate: (path) => router.push(path),
+      }}
+      theme={demoTheme}
+    >
+      <DashboardLayout
+        slots={{
+          toolbarActions: UserSection,
+        }}
+      >
         <Box
-          sx={{
-            p: 1,
-            flex: 1,
-            overflowY: 'auto',
-            height: `calc(100vh - ${header_height}px)`,
+          px={{
+            xs: 0.5, // Extra small screens
+            sm: 4, // Small screens
+            md: 6, // Medium screens
+            lg: 8, // Large screens
+            xl: 10, // Extra large screens
           }}
+          p
         >
           {children}
         </Box>
-      </Stack>
-    </Stack>
+      </DashboardLayout>
+    </AppProvider>
   );
 }
 

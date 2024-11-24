@@ -95,7 +95,7 @@ export default function Page() {
   };
 
   return (
-    <Stack gap={2}>
+    <Stack gap={2} padding={2}>
       <Stack direction="row" gap={1}>
         {metrics.map(({ id, name, value, color }) => (
           <MetricsCard

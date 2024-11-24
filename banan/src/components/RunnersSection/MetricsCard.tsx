@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Card, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 interface MetricsCardProps {
   name: string;
@@ -17,14 +18,28 @@ export function MetricsCard({
   onClick,
 }: MetricsCardProps) {
   const [hovered, setHovered] = useState(false);
+  const theme = useTheme();
 
   const headingTextColor = hovered ? 'black' : selected ? 'black' : color;
   const valueTextColor = hovered ? 'black' : selected ? 'black' : '#3F3F3F';
-  const backgroundColor = hovered ? color : selected ? color : '#F6F6F6';
+
+  //  Tohle je už i na mě moc :D
+  const backgroundColor =
+    theme.palette.mode === 'light'
+      ? hovered
+        ? color
+        : selected
+          ? color
+          : '#F6F6F6'
+      : hovered
+        ? color
+        : selected
+          ? color
+          : '#111111';
 
   return (
     <Stack
-      border={'0.5px solid #D7D7D7'}
+      border={`0.5px solid ${theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'}`}
       borderRadius={1}
       alignItems={'center'}
       justifyContent={'center'}

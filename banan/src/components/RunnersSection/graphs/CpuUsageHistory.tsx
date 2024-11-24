@@ -2,8 +2,16 @@ import { Paper, Stack } from '@mui/material';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import { Metric } from '@/services/runner';
+import {
+  getBackgroundColor,
+  getBorderColor,
+  getTextColor,
+} from '@/components/RunnersSection/graphs/functions';
+import { useTheme } from '@mui/material/styles';
 
 export function CpuUsageHistory({ data }: { data: Metric[] }) {
+  const theme = useTheme();
+
   const cpuSeries = data.map((item) => item.cpu * 100);
 
   return (
@@ -12,8 +20,8 @@ export function CpuUsageHistory({ data }: { data: Metric[] }) {
       width={600}
       height={300}
       flex={2}
-      bgcolor={'#F6F6F6'}
-      border={'0.5px solid #D7D7D7'}
+      bgcolor={getBackgroundColor(theme)}
+      border={getBorderColor(theme)}
       borderRadius={1}
     >
       <HighchartsReact
@@ -21,7 +29,7 @@ export function CpuUsageHistory({ data }: { data: Metric[] }) {
         options={{
           chart: {
             type: 'area',
-            backgroundColor: '#F6F6F6',
+            backgroundColor: getBackgroundColor(theme),
           },
           title: {
             text: '',

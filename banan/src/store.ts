@@ -6,6 +6,8 @@ import appReducer from './slices/app/appReducer';
 import { sasApi } from '@/services/sas';
 import { Middleware } from 'redux';
 import { notificationsApi } from '@/services/notifications';
+import Cookies from 'js-cookie';
+import { setUser } from '@/slices/app/parts/auth';
 
 const loggerMiddleware: Middleware = (storeAPI) => (next) => (action) => {
   console.log('Dispatching action:', action);
@@ -32,6 +34,12 @@ export const store = configureStore({
       .concat(loggerMiddleware)
       .concat(notificationsApi.middleware),
 });
+
+const userCookie = Cookies.get('user');
+if (userCookie) {
+  const user = JSON.parse(userCookie);
+  store.dispatch(setUser(user));
+}
 
 setupListeners(store.dispatch);
 

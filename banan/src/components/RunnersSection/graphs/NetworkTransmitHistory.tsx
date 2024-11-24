@@ -1,20 +1,29 @@
-import { Paper, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Metric } from '@/services/runner';
+import {
+  getBackgroundColor,
+  getBorderColor,
+  getTextColor,
+} from '@/components/RunnersSection/graphs/functions';
+import { useTheme } from '@mui/material/styles';
 
 export function NetworkTransmitHistory({ data }: { data: Metric[] }) {
+  const theme = useTheme();
+
   const networkTransmitSeries = data.map((item) =>
     Number(item.network_transmit),
   );
+
   return (
     <Stack
       p={1}
       maxHeight={300}
       flex={1}
       gap={10}
-      bgcolor={'#F6F6F6'}
-      border={'0.5px solid #D7D7D7'}
+      bgcolor={getBackgroundColor(theme)}
+      border={getBorderColor(theme)}
       borderRadius={1}
     >
       <HighchartsReact
@@ -22,7 +31,7 @@ export function NetworkTransmitHistory({ data }: { data: Metric[] }) {
         options={{
           chart: {
             type: 'area',
-            backgroundColor: '#F6F6F6',
+            backgroundColor: getBackgroundColor(theme),
           },
           title: {
             text: 'Síťový Přenos - Odesláno',

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Stack } from '@mui/material';
 import { LoadingTypography } from '@/components/LoadingTypography';
+import { useTheme } from '@mui/material/styles';
 
 export interface CountCardProps {
   label: string; // Text, který se zobrazí jako popis
@@ -12,13 +13,21 @@ export interface CountCardProps {
 
 function CountCard({ label, value, color, loading, onClick }: CountCardProps) {
   const [hovered, setHovered] = useState(false);
+  const theme = useTheme();
 
   const textColor = hovered ? 'black' : color;
-  const bgColor = hovered ? color : '#F6F6F6';
+  const bgColor =
+    theme.palette.mode === 'light'
+      ? hovered
+        ? color
+        : '#F6F6F6'
+      : hovered
+        ? color
+        : '#111111';
 
   return (
     <Stack
-      border={'0.5px solid #D7D7D7'}
+      border={`0.5px solid ${theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'}`}
       borderRadius={1}
       alignItems="center"
       justifyContent="center"

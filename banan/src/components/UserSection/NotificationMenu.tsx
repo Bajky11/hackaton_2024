@@ -49,8 +49,8 @@ function NotificationsMenu() {
     // Odebereme notifikaci z lokálního stavu
     setLocalNotifications((prev) =>
       prev.length > 0
-        ? prev.filter((notification) => notification.id !== id)
-        : data?.items.filter((notification) => notification.id !== id) || [],
+        ? prev.filter((notification) => notification.unique_id !== id)
+        : data?.items.filter((notification) => notification.unique_id !== id) || [],
     );
   };
 
@@ -102,7 +102,7 @@ function NotificationsMenu() {
         )}
         {!isLoading &&
           notifications.map((notification) => (
-            <MenuItem key={notification.id}>
+            <MenuItem key={notification.unique_id}>
               <ListItemText
                 primary={
                   <Typography color="error" style={{ wordWrap: 'break-word' }}>
@@ -115,7 +115,7 @@ function NotificationsMenu() {
                 <MuiIconButton
                   edge="end"
                   aria-label="delete"
-                  onClick={() => handleDeleteNotification(notification.id)}
+                  onClick={() => handleDeleteNotification(notification.unique_id)}
                 >
                   <DeleteIcon />
                 </MuiIconButton>

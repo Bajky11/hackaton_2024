@@ -29,11 +29,9 @@ import {
 } from '@mui/lab';
 
 import * as React from 'react';
-import { formatTimestamp } from '@/functions/date/formatTimestamp';
 import CustomAccordion from '@/components/automationsV2/CustomAccordion';
-import { Chrono } from 'react-chrono';
 import HorizontalTimeline from '@/components/automationsV2/HorizontalTimeline';
-import ExampleComponent from '@/components/automationsV2/ExampleComponent';
+import { useTheme } from '@mui/material/styles';
 
 export default function AutomationDetail() {
   const { id } = useParams() as { id: string };
@@ -53,7 +51,7 @@ export default function AutomationDetail() {
     return 'Loading...';
 
   return (
-    <Stack spacing={1.5} flex={1}>
+    <Stack spacing={1.5} flex={1} padding={2}>
       <AutomationDetails automationData={automationData} />
       <AutomationScheme automationData={automationData} />
       <AutomationProcess automationLogs={automationLogs} />
@@ -69,7 +67,7 @@ const grayTypographyAttributes = {
 
 const headingTypographyAttributes = {
   fontSize: 18,
-  fontWeight: 800,
+  fontWeight: 600,
   color: '#727272',
 };
 
@@ -119,7 +117,10 @@ function AutomationScheme({ automationData }: AutomationSchemeProps) {
         Automation scheme
       </Typography>
       <CustomCard>
-        <HorizontalTimeline items={automationType.states} />
+        <HorizontalTimeline
+          items={automationType.states}
+          state={automationData.state}
+        />
       </CustomCard>
     </Stack>
   );
@@ -141,15 +142,19 @@ function AutomationProcess({ automationLogs }: AutomationProcessProps) {
 }
 
 export function CustomCard({ children }: { children: React.ReactNode }) {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
-        backgroundColor: '#F6F6F6',
-        border: '0.5px solid #D7D7D7',
+        backgroundColor: theme.palette.mode === 'light' ? '#F6F6F6' : '#111111',
+        border: `0.5px solid ${
+          theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'
+        }`,
         borderRadius: '16px',
-        overflow: 'auto',
-        flexGrow: 1,
         maxWidth: '100%',
+        padding: 2,
+        overflowX: 'auto',
       }}
     >
       {children}

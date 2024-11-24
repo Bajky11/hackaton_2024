@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
-import { type } from 'os';
 
 export type Automation = {
   id: string;
@@ -37,10 +36,12 @@ export type Transition = {
 };
 
 export const stateColors: { [key: string]: string } = {
-  FINISHED: '#4CAF50', // Green
-  RETRY_CHOICE: '#FF9800', // Orange
-  FAILED: '#F44336', // Red
-  DEFAULT: '#1976D2', // Blue for other states
+  FINISHED: '#4CAF50',
+  RETRY_CHOICE: '#FF9800',
+  FAILED: '#F44336',
+  ERROR: '#F44336',
+  DEFAULT: '#1976D2',
+  WARNING: '#FF5F15',
 };
 
 // Funkce pro získání barvy podle stavu
@@ -52,17 +53,9 @@ export const automationApi = createApi({
   reducerPath: 'automationApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getAutomationList: builder.query<
-      { items: Automation[]; total: number },
-      Partial<UrlParams> | void
-    >({
-      query: (params: UrlParams = {}) => ({
-        url: urlParamsBuilder({ base: 'automations', ...params }),
-      }),
-      transformResponse: (response: Automation[], meta) => {
-        // Získání konkrétní hlavičky
-        const total = meta?.response?.headers.get('x-total-count');
-        return { items: response, total: Number(total) };
+    getAutomationList: builder.query<Automation[], void | Partial<UrlParams>>({
+      query: (params: UrlParams = {}) => {
+        return urlParamsBuilder({ base: 'automations', ...params });
       },
     }),
     getAutomationDetail: builder.query<Automation, string>({

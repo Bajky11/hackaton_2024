@@ -1,9 +1,24 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import { getStateColor } from '@/services/automation';
 
-const HorizontalTimeline = ({ items }) => {
+function countMaximumWordLength(items: string[]) {
+  let max = 0;
+
+  items.forEach((item: string) => {
+    if (item.length > max) {
+      max = item.length;
+    }
+  });
+
+  return max;
+}
+
+const HorizontalTimeline = ({ items, state }) => {
+  const oneLetterSize = 7;
+  const minWidth =
+    items.length * (countMaximumWordLength(items) * oneLetterSize); // muze být podle nejdelšího slova
   const lineColor = '#424242';
-  const minWidth = items.length * 220; // muze být podle nejdelšího slova
   return (
     <Box
       sx={{
@@ -12,8 +27,9 @@ const HorizontalTimeline = ({ items }) => {
         alignItems: 'center',
         justifyContent: 'space-between', // Rovnoměrné rozložení bodů
         padding: 2,
+        marginY: 2,
         height: 120, // Zajišťuje místo pro texty a ukazatele
-        //width: minWidth,
+        minWidth,
       }}
     >
       {items.map((item, index) => (
@@ -100,13 +116,17 @@ const HorizontalTimeline = ({ items }) => {
           <Box
             sx={{
               position: 'absolute',
-              top: index % 2 === 0 ? -37 : 17, // Umístění nad nebo pod koncem krátké čárky
+              top: index % 2 === 0 ? -33 : 17, // Umístění nad nebo pod koncem krátké čárky
               left: '50%',
               width: 24,
               height: 24,
               borderRadius: '50%',
               transform: 'translateX(-50%)',
-              border: '2px solid #424242',
+              border: `2px solid ${
+                items[index] === state ? getStateColor(state) : '#424242'
+              }`,
+              backgroundColor:
+                items[index] === state ? getStateColor(state) : 'transparent',
             }}
           />
 

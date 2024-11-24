@@ -1,11 +1,11 @@
-import React from 'react';
-import { GridColDef } from '@mui/x-data-grid';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DataGridWithSearch from '@/components/DataGridWithSearch';
 import { useGetJobListQuery } from '@/services/runner';
 import { QueryFilter } from '@/services/settings';
-import { format } from 'date-fns';
-import { formatTimestamp } from '@/functions/date/formatTimestamp';
+import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
+import { columns } from '@/components/tables/JobsTable/constants';
+import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
+import { Stack, useMediaQuery } from '@mui/material';
 
 interface JobDataGridRowParams {
   query: QueryFilter[];
@@ -14,50 +14,47 @@ interface JobDataGridRowParams {
 
 const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState('');
+  const isMobile = useMediaQuery('(max-width:600px)');
 
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'Id', flex: 1 },
-    { field: 'state', headerName: 'State', flex: 1 },
-    { field: 'organization', headerName: 'Organization', flex: 1 },
-    { field: 'SAS', headerName: 'Sas', flex: 1 },
-    //{ field: 'runner', headerName: 'Runner', flex: 1 },
-    {
-      field: 'timestamp',
-      headerName: 'Timestamp',
-      flex: 1,
-      renderCell: (params) => <span>{formatTimestamp(params.value)}</span>,
-    },
-  ];
-
-  const fetchData = (search: string) => {
-    const {
-      data: jobsList = [],
-      isLoading,
-      error,
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-    } = useGetJobListQuery({
-      query,
-      search,
-      limit: 30,
-    });
-
-    if (isLoading) return [];
-    if (error) return [];
-
-    return jobsList;
+  const extendedQuery = {
+    query: [...query].filter(Boolean),
   };
+
+  const {
+    data: jobsList = [],
+    isLoading,
+    error,
+  } = useGetJobListQuery({
+    query: extendedQuery.query,
+    search: searchValue,
+    limit: 30,
+  });
 
   const handleRowClick = (row: any) => {
     if (navigate) router.push(`/app/jobs/${row.id}`);
   };
 
   return (
-    <DataGridWithSearch
-      heading={'Running Jobs'}
-      fetchData={fetchData}
-      columns={columns}
-      onRowClick={handleRowClick}
-    />
+    <Stack spacing={2} padding={2}>
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        spacing={2}
+        justifyContent={'flex-end'}
+      >
+        <TableSearchField
+          value={searchValue}
+          setValue={setSearchValue}
+          flex={2}
+        />
+      </Stack>
+
+      <StyledResponsiveDataGrid
+        rows={jobsList}
+        columns={columns}
+        onRowClick={handleRowClick}
+      />
+    </Stack>
   );
 };
 

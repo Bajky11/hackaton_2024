@@ -77,8 +77,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     >
       <DashboardLayout
         sx={{
-          height: "100%",
-          minHeight: "100vh",
+          // height: "100%",
+          // minHeight: "100vh",
         }}
         sidebarExpandedWidth={220}
         slots={{

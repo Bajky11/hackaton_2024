@@ -21,6 +21,7 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
                 p: 4,
                 backgroundColor: colorScheme === "light" ? "#FAFAFA" : theme.palette.background.paper,
                 height: '100%',
+                overflow: 'auto',
             }}
         >
             {children}

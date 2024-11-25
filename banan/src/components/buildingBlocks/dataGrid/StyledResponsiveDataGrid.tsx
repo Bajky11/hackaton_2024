@@ -1,10 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
 import { DataGrid } from '@mui/x-data-grid';
+import { useColorScheme, useTheme } from '@mui/material';
 
 export function StyledResponsiveDataGrid({ ...props }) {
   const ref = useRef(null);
   const [width, setWidth] = useState(window.innerWidth);
+
+  const theme = useTheme();
+  const { colorScheme } = useColorScheme();
 
   // Nastavení počáteční šířky na straně klienta
   useEffect(() => {
@@ -25,11 +29,13 @@ export function StyledResponsiveDataGrid({ ...props }) {
       rows={props.rows}
       {...props}
       sx={{
+        backgroundColor: colorScheme === "light" ? theme.palette.background.default : "#1e1e1e",
         '& .MuiDataGrid-root': {
           width, // Dynamicky nastavuje šířku tabulky
         },
         '& .MuiDataGrid-columnHeader': {
           fontSize: 16,
+          backgroundColor: colorScheme === "light" ? theme.palette.background.default : "#1e1e1e",
         },
       }}
     />

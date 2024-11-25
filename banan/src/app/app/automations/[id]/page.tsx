@@ -31,7 +31,7 @@ import {
 import * as React from 'react';
 import CustomAccordion from '@/components/automations/CustomAccordion';
 import HorizontalTimeline from '@/components/automations/HorizontalTimeline';
-import { useTheme } from '@mui/material/styles';
+import { useColorScheme, useTheme } from '@mui/material/styles';
 import {
   grayTypographyAttributes,
   headingTypographyAttributes,
@@ -139,15 +139,15 @@ interface CustomCardProps {
 
 export function CustomCard({ children }: CustomCardProps) {
   const theme = useTheme();
+  const { colorScheme } = useColorScheme();
 
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.mode === 'light' ? '#F6F6F6' : '#111111',
-        border: `0.5px solid ${
-          theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'
-        }`,
-        borderRadius: '16px',
+        backgroundColor: colorScheme === "light" ? theme.palette.background.default : "#1e1e1e",
+        border: `0.5px solid ${theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'
+          }`,
+        borderRadius: 1,
         maxWidth: '100%',
         padding: 2,
         overflowX: 'auto',

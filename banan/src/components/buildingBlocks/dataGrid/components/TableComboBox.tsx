@@ -1,5 +1,5 @@
 import React from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, useColorScheme, useTheme } from '@mui/material';
 
 interface TableComboBoxProps {
   options: string[];
@@ -18,13 +18,19 @@ export function TableComboBox({
   label,
   loading = false,
 }: TableComboBoxProps) {
+  const theme = useTheme();
+  const { colorScheme } = useColorScheme();
+
   return (
     <Autocomplete
       loading={loading}
       disablePortal
       options={options}
       size={'small'}
-      sx={{ flexGrow: flex }}
+      sx={{
+        flexGrow: flex,
+        backgroundColor: colorScheme === "light" ? theme.palette.background.default : "#1e1e1e"
+      }}
       value={value}
       onChange={(event, newValue) => setValue(newValue || '')}
       renderInput={(params) => <TextField {...params} label={label} />}

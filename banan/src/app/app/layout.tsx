@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, useColorScheme, useTheme } from '@mui/material/styles';
 import { usePathname, useRouter } from 'next/navigation';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
@@ -11,6 +11,7 @@ import PrecisionManufacturingRoundedIcon from '@mui/icons-material/PrecisionManu
 import EngineeringRoundedIcon from '@mui/icons-material/EngineeringRounded';
 import { Box } from '@mui/material';
 import UserSection from '@/components/UserSection/UserSection';
+import LayoutWrapper from './LayoutWrapper';
 
 const NAVIGATION: Navigation = [
   {
@@ -58,6 +59,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
+  const { colorScheme } = useColorScheme();
+  const theme = useTheme();
+
   return (
     <AppProvider
       navigation={NAVIGATION}
@@ -72,22 +76,18 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       theme={demoTheme}
     >
       <DashboardLayout
+        sx={{
+          height: "100%",
+          minHeight: "100vh",
+        }}
         sidebarExpandedWidth={220}
         slots={{
           toolbarActions: UserSection,
         }}
       >
-        <Box
-          px={{
-            xs: 0.5, // Extra small screens
-            sm: 4, // Small screens
-            md: 6, // Medium screens
-            lg: 8, // Large screens
-            xl: 10, // Extra large screens
-          }}
-        >
+        <LayoutWrapper>
           {children}
-        </Box>
+        </LayoutWrapper>
       </DashboardLayout>
     </AppProvider>
   );

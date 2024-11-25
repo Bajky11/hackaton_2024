@@ -31,24 +31,24 @@ const AutomationsTable = () => {
     query: [
       sasComboBoxValue
         ? {
-            property: 'sas',
-            operator: QueryOperator.EQ,
-            value: sasComboBoxValue,
-          }
+          property: 'sas',
+          operator: QueryOperator.EQ,
+          value: sasComboBoxValue,
+        }
         : undefined,
       stateComboBoxValue
         ? {
-            property: 'state',
-            operator: QueryOperator.EQ,
-            value: stateComboBoxValue,
-          }
+          property: 'state',
+          operator: QueryOperator.EQ,
+          value: stateComboBoxValue,
+        }
         : undefined,
       typeComboBoxValue
         ? {
-            property: 'type',
-            operator: QueryOperator.EQ,
-            value: typeComboBoxValue,
-          }
+          property: 'type',
+          operator: QueryOperator.EQ,
+          value: typeComboBoxValue,
+        }
         : undefined,
     ].filter(Boolean),
   });
@@ -80,8 +80,8 @@ const AutomationsTable = () => {
   };
 
   return (
-    <Stack spacing={2} padding={2}>
-      <Typography fontSize={30} fontWeight={'bold'} pr={2}>
+    <Stack spacing={2}>
+      <Typography fontSize={30} fontWeight={'bold'}>
         Automations Table
       </Typography>
       <Stack

@@ -8,10 +8,10 @@ function UserInfo({ user }: { user: User | null }) {
   const userEmail = user ? user.email : '';
 
   return (
-    <Stack direction={'row'} gap={1} alignItems={'center'}>
-      <Avatar>{userName[0]}</Avatar>
+    <Stack direction={'row'} gap={2} alignItems={'center'}>
+
       {!isMobile && (
-        <Stack>
+        <Stack alignItems={'flex-end'}>
           <Typography
             sx={{ textTransform: 'uppercase' }}
             fontWeight={'bold'}
@@ -19,9 +19,10 @@ function UserInfo({ user }: { user: User | null }) {
           >
             {userName}
           </Typography>
-          <Typography fontSize={12}>{userEmail}</Typography>
+          <Typography lineHeight={1} fontSize={12}>{userEmail}</Typography>
         </Stack>
       )}
+      <Avatar>{userName[0]}</Avatar>
     </Stack>
   );
 }

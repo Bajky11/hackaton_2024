@@ -20,10 +20,10 @@ function CountCard({ label, value, color, loading, onClick }: CountCardProps) {
     theme.palette.mode === 'light'
       ? hovered
         ? color
-        : '#F6F6F6'
+        : theme.palette.background.default
       : hovered
         ? color
-        : '#111111';
+        : '#1e1e1e';
 
   return (
     <Stack

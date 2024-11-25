@@ -11,9 +11,11 @@ function UserSection() {
   const user = useSelector((state: RootState) => state.app.auth.user);
 
   return (
-    <Stack direction={'row'} spacing={2} alignItems={'center'}>
-      <NotificationsMenu />
-      <UserInfo user={user} />
+    <Stack direction={'row'} spacing={0} alignItems={'center'}>
+      <Stack direction={'row'} spacing={2} alignItems={'center'}>
+        <NotificationsMenu />
+        <UserInfo user={user} />
+      </Stack>
       <UserMenu />
     </Stack>
   );

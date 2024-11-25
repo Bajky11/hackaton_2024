@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField, useColorScheme, useTheme } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 interface TableSearchFieldParams {
@@ -13,6 +13,10 @@ export function TableSearchField({
   setValue,
   flex = 1,
 }: TableSearchFieldParams) {
+
+  const theme = useTheme();
+  const { colorScheme } = useColorScheme();
+
   return (
     <TextField
       slotProps={{
@@ -24,7 +28,10 @@ export function TableSearchField({
           ),
         },
       }}
-      sx={{ flexGrow: flex }}
+      sx={{
+        flexGrow: flex,
+        backgroundColor: colorScheme === "light" ? theme.palette.background.default : "#1e1e1e",
+      }}
       size={'small'}
       label="Search everything in table..."
       value={value}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useColorScheme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface MetricsCardProps {
@@ -22,6 +22,7 @@ export function MetricsCard({
 }: MetricsCardProps) {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
+  const { colorScheme } = useColorScheme();
 
   const headingTextColor = hovered ? 'black' : selected ? 'black' : color;
   const valueTextColor = hovered ? 'black' : selected ? 'black' : '#3F3F3F';
@@ -33,12 +34,12 @@ export function MetricsCard({
         ? color
         : selected
           ? color
-          : '#F6F6F6'
+          : theme.palette.background.default
       : hovered
         ? color
         : selected
           ? color
-          : '#111111';
+          : "#1e1e1e";
 
   return (
     <Stack

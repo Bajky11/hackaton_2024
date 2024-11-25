@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack, useColorScheme, useTheme } from '@mui/material';
 import React from 'react';
 
 interface MetricsDetailCardProps {
@@ -10,8 +10,9 @@ interface MetricsDetailCardProps {
 export function MetricsDetailCard({
   children,
   direction = 'row',
-  gap = 1,
+  gap = 2,
 }: MetricsDetailCardProps) {
+
   return (
     <Stack
       direction={direction}

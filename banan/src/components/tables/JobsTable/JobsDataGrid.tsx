@@ -37,14 +37,14 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
 
   return (
     <Stack spacing={2} pt={2}>
+      <Typography fontSize={30} fontWeight={'bold'} pr={2}>
+        Jobs Table
+      </Typography>
       <Stack
         direction={isMobile ? 'column' : 'row'}
         spacing={2}
         justifyContent={'flex-end'}
       >
-        <Typography fontSize={30} fontWeight={'bold'} pr={2}>
-          Jobs Table
-        </Typography>
         <TableSearchField
           value={searchValue}
           setValue={setSearchValue}

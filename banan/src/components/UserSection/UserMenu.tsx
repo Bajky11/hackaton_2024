@@ -63,13 +63,13 @@ function UserMenu() {
           }}
         >
           <Stack direction={'row'} spacing={2} alignItems="center">
-            {colorScheme === 'dark' ? (
+            {colorScheme === 'light' ? (
               <DarkModeOutlinedIcon />
             ) : (
               <LightModeIcon />
             )}
             <Typography>
-              {colorScheme === 'dark' ? 'Dark mode' : 'Light mode'}
+              {colorScheme === 'dark' ? 'Light mode' : 'Dark mode'}
             </Typography>
           </Stack>
         </MenuItem>

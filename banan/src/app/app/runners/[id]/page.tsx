@@ -97,8 +97,8 @@ export default function Page() {
   };
 
   return (
-    <Stack gap={2} padding={2} flex={1}>
-      <Stack direction={isMobile ? 'column' : 'row'} gap={1}>
+    <Stack gap={2} flex={1}>
+      <Stack direction={isMobile ? 'column' : 'row'} gap={2}>
         {metrics.map(({ id, name, value, color }) => (
           <MetricsCard
             key={name}

@@ -32,17 +32,17 @@ const RunnersTable = () => {
     query: [
       runnerGroupComboBoxValue
         ? {
-            property: 'runner_group',
-            operator: QueryOperator.EQ,
-            value: runnerGroupComboBoxValue,
-          }
+          property: 'runner_group',
+          operator: QueryOperator.EQ,
+          value: runnerGroupComboBoxValue,
+        }
         : undefined,
       organizationComboBoxValue
         ? {
-            property: 'organization',
-            operator: QueryOperator.EQ,
-            value: organizationComboBoxValue,
-          }
+          property: 'organization',
+          operator: QueryOperator.EQ,
+          value: organizationComboBoxValue,
+        }
         : undefined,
     ].filter(Boolean),
   });
@@ -55,16 +55,19 @@ const RunnersTable = () => {
   };
 
   return (
-    <Stack spacing={2} padding={2}>
+    <Stack spacing={2}>
+      <Typography fontSize={30} fontWeight={'bold'} pr={2}>
+        Runners Table
+      </Typography>
       <RunnerTableStateSearch value={searchValue} setValue={setSearchValue} />
       <Stack
+        sx={{
+          pt: 4
+        }}
         direction={isMobile ? 'column' : 'row'}
         spacing={2}
         justifyContent={'flex-end'}
       >
-        <Typography fontSize={30} fontWeight={'bold'} pr={2}>
-          Runners Table
-        </Typography>
         <TableSearchField
           value={searchValue}
           setValue={setSearchValue}

@@ -1,149 +1,47 @@
 'use client';
 
-import { SuccessRate } from '@/components/RunnersSection/graphs/SuccessRate';
-import JobsDataGrid from '@/components/tables/JobsTable/JobsDataGrid';
-import { useGetJobListQuery } from '@/services/runner';
-import { QueryFilter, QueryOperator } from '@/services/settings';
-import { Stack, Typography, Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import JobInSAS from '@/components/sas/JobInSAS';
+import AutomationInSAS from '@/components/sas/AutomationInSAS';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
-
-enum StatisticEnum {
-  BUILD = 'BUILD',
-  TEST = 'TEST',
-  DEPLOY = 'DEPLOY',
-  DEPLOY_PROD = 'DEPLOY_PROD',
-}
-
-interface ShowStatisticContext {
-  failureClicked: boolean;
-  statisticName: StatisticEnum;
-}
 
 export default function SasDetailPage(): JSX.Element {
-  const [showStatisticContext, setShowStatisticContext] =
-    useState<ShowStatisticContext | null>(null);
   const { id } = useParams() as { id: string };
-
-  const afterGraphClickQueries: QueryFilter[] = createQueries(
-    id,
-    showStatisticContext?.failureClicked,
-    showStatisticContext?.statisticName,
-  );
-
-  function getJobStatistic(failure: boolean, statistic: StatisticEnum): number {
-    const {
-      data: jobsList = [],
-      isLoading,
-      error,
-    } = useGetJobListQuery({
-      query: createQueries(id, failure, statistic),
-    });
-
-    if (isLoading) return NaN;
-    if (error) return NaN;
-
-    return jobsList.length;
-  }
 
   return (
     <Box padding={2}>
-      <Typography fontSize={30} fontWeight={'bold'} pr={2}>
-        {id}
+      <Typography fontSize={30} fontWeight="bold" marginBottom={2}>
+        Detail SAS: {id}
       </Typography>
-      <Stack
+      <Box
+        display="flex"
+        flexWrap={{
+          xs: 'wrap',
+          md: 'nowrap',
+        }} /* Přizpůsobení na malých zařízeních */
         gap={2}
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-        }}
       >
+        {/* Jobs sekce */}
         <Box
-          gap={1}
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-          }}
+          flex={{
+            xs: '1 1 100%',
+            md: '2',
+          }} /* Na mobilu 100% šířky, jinak 2/3 */
+          flexBasis={{ xs: '100%', md: '66.66%' }}
         >
-          {Object.values(StatisticEnum).map((statistic: StatisticEnum) => {
-            return (
-              <SuccessRate
-                key={statistic}
-                title={getStaticTitle(statistic)}
-                data={{
-                  failureCount: getJobStatistic(true, statistic),
-                  successCount: getJobStatistic(false, statistic),
-                }}
-                onFailureClick={() =>
-                  setShowStatisticContext({
-                    failureClicked: true,
-                    statisticName: statistic,
-                  })
-                }
-                onSuccessClick={() =>
-                  setShowStatisticContext({
-                    failureClicked: false,
-                    statisticName: statistic,
-                  })
-                }
-              />
-            );
-          })}
+          <JobInSAS />
         </Box>
-        {showStatisticContext === null ? (
-          <></>
-        ) : (
-          <JobsDataGrid query={afterGraphClickQueries} navigate={true} />
-        )}
-      </Stack>
+        {/* Automations sekce */}
+        <Box
+          flex={{
+            xs: '1 1 100%',
+            md: '1',
+          }} /* Na mobilu 100% šířky, jinak 1/3 */
+          flexBasis={{ xs: '100%', md: '33.33%' }}
+        >
+          <AutomationInSAS />
+        </Box>
+      </Box>
     </Box>
   );
-}
-
-function createQueries(
-  id: string,
-  failure: boolean | undefined,
-  statisticName?: StatisticEnum,
-): QueryFilter[] {
-  return [
-    { property: 'SAS', operator: QueryOperator.EQ, value: id },
-    {
-      property: 'state',
-      operator: QueryOperator.EQ,
-      value: failure ? 'failed' : 'success',
-    },
-    {
-      property: 'runner',
-      operator: QueryOperator.LIKE,
-      value: getRunnerByStatic(statisticName),
-    },
-  ];
-}
-
-function getRunnerByStatic(statisticName?: StatisticEnum): string {
-  switch (statisticName) {
-    case StatisticEnum.TEST:
-      return 'csas-dev-csas-linux-test';
-    case StatisticEnum.DEPLOY:
-      return 'csas-ops-csas-linux';
-    case StatisticEnum.DEPLOY_PROD:
-      return 'csas-linux-prod';
-    default:
-      return 'csas-dev-csas-linux';
-  }
-}
-
-function getStaticTitle(statisticName?: StatisticEnum): string {
-  switch (statisticName) {
-    case StatisticEnum.TEST:
-      return 'Testy';
-    case StatisticEnum.DEPLOY:
-      return 'Deploy non-prod';
-    case StatisticEnum.DEPLOY_PROD:
-      return 'Deploy prod';
-    default:
-      return 'Buildy';
-  }
 }

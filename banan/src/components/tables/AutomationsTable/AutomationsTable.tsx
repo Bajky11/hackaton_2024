@@ -53,15 +53,11 @@ const AutomationsTable = () => {
     ].filter(Boolean),
   });
 
-  console.log('Automations List:', automationsList);
-
   const {
     data: sasList,
     isLoading: isSasListLoading,
     error: sasListError,
   } = useGetSASListQuery();
-
-  console.log('SAS List:', sasList);
 
   const {
     data: typeList,
@@ -69,13 +65,10 @@ const AutomationsTable = () => {
     error: typeListError,
   } = useGetAutomationTypeListQuery();
 
-  console.log('Type List:', typeList);
-
   if (isAutomationsListLoading || isSasListLoading) return 'loading';
   if (automationsListError || sasListError) return 'error';
 
   const handleRowClick = (row: any) => {
-    console.log('Row clicked:', row);
     router.push(`/app/automations/${row.id}`);
   };
 

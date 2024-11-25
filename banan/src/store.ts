@@ -8,9 +8,8 @@ import { Middleware } from 'redux';
 import { notificationsApi } from '@/services/notifications';
 
 const loggerMiddleware: Middleware = (storeAPI) => (next) => (action) => {
-  // console.log('Dispatching action:', action);
   const result = next(action);
-  // console.log('Updated state:', storeAPI.getState());
+  console.log('Updated state:', storeAPI.getState());
   return result;
 };
 

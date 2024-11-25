@@ -18,8 +18,6 @@ export function middleware(req: NextRequest) {
     if (!user || !user.id) {
       throw new Error('Invalid user data');
     }
-
-    console.log('Valid user:', user);
   } catch (error) {
     console.error('Error parsing user cookie:', error);
 

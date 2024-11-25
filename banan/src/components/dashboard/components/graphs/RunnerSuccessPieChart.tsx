@@ -2,6 +2,7 @@
 
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
+import { useColorScheme } from '@mui/material';
 
 interface IRunnerSuccessPieChartProps {
   success: number;
@@ -10,6 +11,8 @@ interface IRunnerSuccessPieChartProps {
 }
 
 export const RunnerSuccessPieChart = ({ success, failed, color }: IRunnerSuccessPieChartProps) => {
+
+  const { colorScheme } = useColorScheme();
 
   return (
     <HighchartsReact
@@ -62,7 +65,7 @@ export const RunnerSuccessPieChart = ({ success, failed, color }: IRunnerSuccess
           style: {
             fontSize: '12px',
             fontWeight: 'bold',
-            color: '#666666',
+            color: colorScheme === 'dark' ? '#fff' : '#000',
           },
         },
       }}

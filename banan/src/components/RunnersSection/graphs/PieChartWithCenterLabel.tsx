@@ -3,6 +3,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { styled } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { Stack } from '@mui/material';
+import { CustomCard } from '@/app/app/automations/[id]/page';
 
 interface PieChartWithCenterLabelProps {
   data: Array<{
@@ -46,38 +47,47 @@ export const PieChartWithCenterLabel = ({
 }: PieChartWithCenterLabelProps) => {
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);
 
-  return (
-    <Stack
-      p={1}
-      maxHeight={300}
-      flex={1}
-      bgcolor={backgroundColor}
-      border={`0.5px solid ${borderColor}`}
-      borderRadius={1}
-    >
-      {title && (
-        <h3 style={{ textAlign: 'center', marginBottom: 16 }}>{title}</h3>
-      )}
-      <PieChart
-        series={[
-          {
-            data: data.map((item) => ({
-              value: item.value,
-              label: item.name,
-              color: item.color,
-              onClick: item.onClick,
-            })),
-            innerRadius: 80,
-            paddingAngle: 1,
-            cornerRadius: 3,
-          },
-        ]}
-        width={width}
-        height={height}
-        onItemClick={(event, d) => data[d.dataIndex].onClick?.()}
+  /*
+    Instead of customCard was:
+    in case something is broken just remove CustomCard.. sorry O:)
+  
+     <Stack
+        p={1}
+        maxHeight={300}
+        flex={1}
+        bgcolor={backgroundColor}
+        border={`0.5px solid ${borderColor}`}
+        borderRadius={1}
       >
-        <PieCenterLabel>{centerLabel}</PieCenterLabel>
-      </PieChart>
-    </Stack>
+  
+    */
+  return (
+    <CustomCard>
+      <Stack maxHeight={300}>
+        {title && (
+          <h3 style={{ textAlign: 'center', marginBottom: 16 }}>{title}</h3>
+        )}
+        <PieChart
+          series={[
+            {
+              data: data.map((item) => ({
+                value: item.value,
+                label: item.name,
+                color: item.color,
+                onClick: item.onClick,
+              })),
+              innerRadius: 75,
+              paddingAngle: 1,
+              cornerRadius: 3,
+            },
+          ]}
+          width={width}
+          height={height}
+          onItemClick={(event, d) => data[d.dataIndex].onClick?.()}
+        >
+          <PieCenterLabel>{centerLabel}</PieCenterLabel>
+        </PieChart>
+      </Stack>
+    </CustomCard>
   );
 };

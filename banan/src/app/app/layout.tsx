@@ -47,7 +47,7 @@ const demoTheme = createTheme({
     values: {
       xs: 0,
       sm: 600,
-      md: 600,
+      md: 800,
       lg: 1200,
       xl: 1536,
     },
@@ -72,6 +72,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       theme={demoTheme}
     >
       <DashboardLayout
+        sidebarExpandedWidth={220}
         slots={{
           toolbarActions: UserSection,
         }}
@@ -84,7 +85,6 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             lg: 8, // Large screens
             xl: 10, // Extra large screens
           }}
-          p
         >
           {children}
         </Box>

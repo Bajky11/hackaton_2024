@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface MetricsCardProps {
   name: string;
@@ -8,6 +9,7 @@ interface MetricsCardProps {
   color: string;
   selected: boolean;
   onClick: () => void;
+  isMobile: boolean;
 }
 
 export function MetricsCard({
@@ -16,6 +18,7 @@ export function MetricsCard({
   color,
   selected,
   onClick,
+  isMobile,
 }: MetricsCardProps) {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
@@ -39,8 +42,10 @@ export function MetricsCard({
 
   return (
     <Stack
+      direction={isMobile ? 'row' : 'column'}
+      gap={isMobile ? 2 : 0}
       border={`0.5px solid ${theme.palette.mode === 'light' ? '#D7D7D7' : '#333333'}`}
-      borderRadius={1}
+      borderRadius={2}
       alignItems={'center'}
       justifyContent={'center'}
       onClick={onClick}
@@ -56,13 +61,17 @@ export function MetricsCard({
     >
       <Typography
         fontWeight="bold"
-        variant={'h6'}
+        variant={isMobile ? 'h7' : 'h6'}
         color={headingTextColor}
         textTransform={'uppercase'}
       >
         {name}
       </Typography>
-      <Typography fontWeight="bold" color={valueTextColor} variant={'h4'}>
+      <Typography
+        fontWeight="bold"
+        color={valueTextColor}
+        variant={isMobile ? 'h5' : 'h5'}
+      >
         {value}
       </Typography>
     </Stack>

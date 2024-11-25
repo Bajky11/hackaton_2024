@@ -32,6 +32,10 @@ import * as React from 'react';
 import CustomAccordion from '@/components/automations/CustomAccordion';
 import HorizontalTimeline from '@/components/automations/HorizontalTimeline';
 import { useTheme } from '@mui/material/styles';
+import {
+  grayTypographyAttributes,
+  headingTypographyAttributes,
+} from '@/constants';
 
 export default function AutomationDetail() {
   const { id } = useParams() as { id: string };
@@ -58,18 +62,6 @@ export default function AutomationDetail() {
     </Stack>
   );
 }
-
-const grayTypographyAttributes = {
-  fontSize: 14,
-  fontWeight: 'bold',
-  color: '#727272',
-};
-
-const headingTypographyAttributes = {
-  fontSize: 18,
-  fontWeight: 600,
-  color: '#727272',
-};
 
 interface AutomationDetailsProps {
   automationData: Automation;
@@ -141,7 +133,11 @@ function AutomationProcess({ automationLogs }: AutomationProcessProps) {
   );
 }
 
-export function CustomCard({ children }: { children: React.ReactNode }) {
+interface CustomCardProps {
+  children: React.ReactNode;
+}
+
+export function CustomCard({ children }: CustomCardProps) {
   const theme = useTheme();
 
   return (
@@ -155,6 +151,7 @@ export function CustomCard({ children }: { children: React.ReactNode }) {
         maxWidth: '100%',
         padding: 2,
         overflowX: 'auto',
+        flexGrow: 1,
       }}
     >
       {children}

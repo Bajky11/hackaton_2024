@@ -41,6 +41,10 @@ function UserMenu() {
     router.push('/');
   };
 
+  const handleNavigateToProfile = () => {
+    router.push('/app/profile');
+  };
+
   return (
     <>
       <IconButton onClick={handleClick}>
@@ -69,19 +73,13 @@ function UserMenu() {
             </Typography>
           </Stack>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleNavigateToProfile}>
           <Stack direction={'row'} spacing={2}>
             <PermIdentityOutlinedIcon />
             <Typography>Profile</Typography>
           </Stack>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Stack direction={'row'} spacing={2}>
-            <SettingsOutlinedIcon />
-            <Typography>Settings</Typography>
-          </Stack>
-        </MenuItem>
-        <MenuItem onClick={() => handleLogout()}>
+        <MenuItem onClick={handleLogout}>
           <Stack direction={'row'} spacing={2}>
             <LogoutOutlinedIcon />
             <Typography>Logout</Typography>

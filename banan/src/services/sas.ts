@@ -1,5 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
+import {
+  UrlParams,
+  customBaseQuery,
+  urlParamsBuilder,
+  keepUnusedDataFor,
+} from './settings';
 
 export const sasApi = createApi({
   reducerPath: 'sasApi',
@@ -9,8 +14,9 @@ export const sasApi = createApi({
       query: (params: UrlParams = {}) => {
         return urlParamsBuilder({ base: 'sas', ...params });
       },
+      keepUnusedDataFor,
     }),
   }),
 });
 
-export const { useGetSASListQuery } = sasApi;
+export const { useGetSASListQuery, usePrefetch } = sasApi;

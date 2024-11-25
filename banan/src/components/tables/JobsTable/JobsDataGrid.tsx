@@ -5,7 +5,7 @@ import { QueryFilter } from '@/services/settings';
 import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { columns } from '@/components/tables/JobsTable/constants';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
-import { Stack, useMediaQuery } from '@mui/material';
+import { Stack, Typography, useMediaQuery } from '@mui/material';
 
 interface JobDataGridRowParams {
   query: QueryFilter[];
@@ -36,12 +36,15 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
   };
 
   return (
-    <Stack spacing={2} padding={2}>
+    <Stack spacing={2} pt={2}>
       <Stack
         direction={isMobile ? 'column' : 'row'}
         spacing={2}
         justifyContent={'flex-end'}
       >
+        <Typography fontSize={30} fontWeight={'bold'} pr={2}>
+          Jobs Table
+        </Typography>
         <TableSearchField
           value={searchValue}
           setValue={setSearchValue}

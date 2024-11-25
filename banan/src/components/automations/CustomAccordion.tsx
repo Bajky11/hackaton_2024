@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import { formatTimestamp } from '@/functions/date/formatTimestamp';
 import StatusIcon from '@/components/automations/StatusIcon';
+import { grayTypographyAttributes } from '@/constants';
 
 const StyledAccordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -143,9 +144,3 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({ data }) => {
 };
 
 export default CustomAccordion;
-
-const grayTypographyAttributes = {
-  fontSize: 12,
-  fontWeight: 'bold',
-  color: '#727272',
-};

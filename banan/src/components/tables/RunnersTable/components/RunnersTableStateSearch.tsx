@@ -34,7 +34,7 @@ export function RunnerTableStateSearch({
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Stack direction="row" gap={2}>
+    <Stack direction="row" gap={1.5}>
       {states.map(({ label, color, key }) => (
         <CountCard
           key={key}

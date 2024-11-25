@@ -11,8 +11,10 @@ import { NetworkMetricsDetail } from '@/components/RunnersSection/metricDetails/
 import { DiskMetricsDetail } from '@/components/RunnersSection/metricDetails/DiskMetricsDetail';
 import JobsDataGrid from '@/components/tables/JobsTable/JobsDataGrid';
 import { QueryFilter, QueryOperator } from '@/services/settings';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function Page() {
+  const isMobile = useMediaQuery('(max-width:1100px)');
   const [selectedMetric, setSelectedMetric] = useState<string | null>('cpu');
   const { id } = useParams() as { id: string };
   const {
@@ -95,8 +97,8 @@ export default function Page() {
   };
 
   return (
-    <Stack gap={2} padding={2}>
-      <Stack direction="row" gap={1}>
+    <Stack gap={2} padding={2} flex={1}>
+      <Stack direction={isMobile ? 'column' : 'row'} gap={1}>
         {metrics.map(({ id, name, value, color }) => (
           <MetricsCard
             key={name}
@@ -105,6 +107,7 @@ export default function Page() {
             color={color}
             selected={selectedMetric === id}
             onClick={() => setSelectedMetric(selectedMetric === id ? null : id)}
+            isMobile={isMobile}
           />
         ))}
       </Stack>

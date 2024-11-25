@@ -3,10 +3,8 @@ import useResizeObserver from '@react-hook/resize-observer';
 import { DataGrid } from '@mui/x-data-grid';
 
 export function StyledResponsiveDataGrid({ ...props }) {
-  console.log('props', props);
-
   const ref = useRef(null);
-  const [width, setWidth] = useState(0);
+  const [width, setWidth] = useState(window.innerWidth);
 
   // Nastavení počáteční šířky na straně klienta
   useEffect(() => {
@@ -22,20 +20,18 @@ export function StyledResponsiveDataGrid({ ...props }) {
 
   // TODO - Předělat na Matějův virtualizovaný table
   return (
-    <div ref={ref} style={{ width: '100%' }}>
-      <DataGrid
-        columns={props.columns}
-        rows={props.rows}
-        {...props}
-        sx={{
-          '& .MuiDataGrid-root': {
-            width, // Dynamicky nastavuje šířku tabulky
-          },
-          '& .MuiDataGrid-columnHeader': {
-            fontSize: 16,
-          },
-        }}
-      />
-    </div>
+    <DataGrid
+      columns={props.columns}
+      rows={props.rows}
+      {...props}
+      sx={{
+        '& .MuiDataGrid-root': {
+          width, // Dynamicky nastavuje šířku tabulky
+        },
+        '& .MuiDataGrid-columnHeader': {
+          fontSize: 16,
+        },
+      }}
+    />
   );
 }

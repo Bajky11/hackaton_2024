@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
+import {
+  UrlParams,
+  customBaseQuery,
+  urlParamsBuilder,
+  keepUnusedDataFor,
+} from './settings';
 
 export type Automation = {
   id: string;
@@ -57,6 +62,7 @@ export const automationApi = createApi({
       query: (params: UrlParams = {}) => {
         return urlParamsBuilder({ base: 'automations', ...params });
       },
+      keepUnusedDataFor,
     }),
     getAutomationDetail: builder.query<Automation, string>({
       query: (id) => `automations/${id}`,
@@ -96,4 +102,5 @@ export const {
   useGetAutomationTypeListQuery,
   useGetAutomationTypeDetailQuery,
   useGetFailedAutomationListQuery,
+  usePrefetch,
 } = automationApi;

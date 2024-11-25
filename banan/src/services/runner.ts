@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
+import {
+  UrlParams,
+  customBaseQuery,
+  urlParamsBuilder,
+  keepUnusedDataFor,
+} from './settings';
 import { createSelector } from '@reduxjs/toolkit';
 
 export type Runner = {
@@ -57,6 +62,7 @@ export const runnerApi = createApi({
       query: (params: UrlParams = {}) => {
         return urlParamsBuilder({ base: 'runners', ...params });
       },
+      keepUnusedDataFor,
     }),
     getRunnerDetail: builder.query<Runner, string>({
       query: (id) => `runners/${id}`,
@@ -95,6 +101,7 @@ export const {
   useGetJobDetailQuery,
   useGetMetricWithRunnerListQuery,
   useGetMetricWithRunnerDetailQuery,
+  usePrefetch,
 } = runnerApi;
 
 export const selectAllJobs = runnerApi.endpoints.getJobList.select();

@@ -7,6 +7,7 @@ import {
   getBorderColor,
 } from '@/components/RunnersSection/graphs/functions';
 import { useTheme } from '@mui/material/styles';
+import { CustomCard } from '@/app/app/automations/[id]/page';
 
 export function DiskReadsHistory({ data }: { data: Metric[] }) {
   const theme = useTheme();
@@ -14,44 +15,39 @@ export function DiskReadsHistory({ data }: { data: Metric[] }) {
   const fsReadsSeries = data.map((item) => Number(item.fs_reads));
 
   return (
-    <Stack
-      p={1}
-      flex={1}
-      maxHeight={300}
-      bgcolor={getBackgroundColor(theme)}
-      border={getBorderColor(theme)}
-      borderRadius={1}
-    >
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={{
-          chart: {
-            type: 'area',
-            backgroundColor: getBackgroundColor(theme),
-          },
-          title: {
-            text: 'I/O Operace - Zápisy',
-          },
-          xAxis: {
-            labels: {
-              enabled: false, // Odebere popisky na ose X
+    <CustomCard>
+      <Stack maxHeight={300}>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={{
+            chart: {
+              type: 'area',
+              backgroundColor: getBackgroundColor(theme),
             },
-            tickLength: 0, // Odebere značky (ticks) na ose X
-          },
-          yAxis: {
             title: {
-              text: 'Využití (%)',
+              text: 'I/O Operace - Zápisy',
             },
-          },
-          series: [
-            {
-              //name: `Zápisy (${fsWritesUtilization[fsWritesUtilization.length - 1]}%)`,
-              data: fsReadsSeries,
-              color: '#4BA43A',
+            xAxis: {
+              labels: {
+                enabled: false, // Odebere popisky na ose X
+              },
+              tickLength: 0, // Odebere značky (ticks) na ose X
             },
-          ],
-        }}
-      />
-    </Stack>
+            yAxis: {
+              title: {
+                text: 'Využití (%)',
+              },
+            },
+            series: [
+              {
+                //name: `Zápisy (${fsWritesUtilization[fsWritesUtilization.length - 1]}%)`,
+                data: fsReadsSeries,
+                color: '#4BA43A',
+              },
+            ],
+          }}
+        />
+      </Stack>
+    </CustomCard>
   );
 }

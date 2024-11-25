@@ -12,6 +12,8 @@ export const customBaseQuery = fetchBaseQuery({
   },
 });
 
+export const keepUnusedDataFor = 180;
+
 export enum QueryOperator {
   /** Filters by equality */
   EQ = 'eq',

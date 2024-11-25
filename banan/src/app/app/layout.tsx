@@ -15,7 +15,7 @@ function AppLayout({
 }) {
   return (
     <NotificationsProvider>
-      <Stack direction={'row'} sx={{ height: '100vh' }}>
+      <Stack direction={'row'} sx={{ height: '100vh', backgroundColor: "#ECECEC" }}>
         <Drawer />
         <Stack direction={'column'} flex={1} p={1} gap={1}>
           <Box px={1}>

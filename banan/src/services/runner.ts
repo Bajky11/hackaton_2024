@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { UrlParams, customBaseQuery, urlParamsBuilder } from './settings';
-import { createSelector } from '@reduxjs/toolkit';
 
 export type Runner = {
   id: string;
@@ -93,10 +92,3 @@ export const {
   useGetMetricWithRunnerListQuery,
   useGetMetricWithRunnerDetailQuery,
 } = runnerApi;
-
-export const selectAllJobs = runnerApi.endpoints.getJobList.select();
-
-export const selectSuccessfulJobs = createSelector(
-  [selectAllJobs],
-  (jobList) => jobList?.data?.filter((job) => job.state === JobState.SUCCESS) || []
-);

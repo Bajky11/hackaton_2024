@@ -42,7 +42,6 @@ const SasTable = () => {
   }, [user]);
 
   const handleRowClick = (row: any) => {
-    console.log('Row clicked:', row);
     router.push(`/app/sas/${row.row.name}`);
   };
 

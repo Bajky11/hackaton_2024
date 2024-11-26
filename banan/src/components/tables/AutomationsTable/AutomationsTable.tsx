@@ -80,7 +80,8 @@ const AutomationsTable = () => {
   if (automationsListError || sasListError) return 'error';
 
   const handleRowClick = (row: any) => {
-    router.push(`/app/automations/${row.id}`);
+    console.log(row);
+    router.push(`/app/automations/${row.row.id}`);
   };
 
   return (

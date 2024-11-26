@@ -17,14 +17,14 @@ const DashboardLayout = () => {
     const getJobsByRunnerGroupAndOrganization = (organization: string, runnerGroup: string) => {
         if (!runners || !jobs) return [];
 
-        const filteredRunners = runners.filter(
+        const filteredRunners = runners.items.filter(
             (runner: Runner) =>
                 runner.runner_group === runnerGroup && runner.organization === organization
         );
 
         if (filteredRunners.length === 0) return [];
 
-        return jobs.filter((job: Job) =>
+        return jobs.items.filter((job: Job) =>
             filteredRunners.some((runner) => runner.id === job.runner)
         );
     }
@@ -70,11 +70,11 @@ const DashboardLayout = () => {
                 />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 6, lg: 6 }}  >
-                <RunnersAvailabilityWidget runners={runners ?? []} />
+                <RunnersAvailabilityWidget runners={runners ? runners.items : []} />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 6, lg: 6 }}  >
                 <RunnersMemoryUsageWidget
-                    runners={runners ?? []}
+                    runners={runners ? runners.items : []}
                     metricWithRunners={metricWithRunners ?? []} />
             </Grid2>
         </Grid2>

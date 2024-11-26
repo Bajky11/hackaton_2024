@@ -58,18 +58,27 @@ export const runnerApi = createApi({
   reducerPath: 'runnerApi',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getRunnerList: builder.query<Runner[], void | Partial<UrlParams>>({
-      query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'runners', ...params });
+    getRunnerList: builder.query<{ items: Runner[]; total: number }, Partial<UrlParams> | void>({
+      query: (params: UrlParams = {}) => ({
+        url: urlParamsBuilder({ base: 'runners', ...params }),
+      }),
+      transformResponse: (response: Runner[], meta) => {
+        // Získání konkrétní hlavičky
+        const total = meta?.response?.headers.get('x-filtered-count');
+        return { items: response, total: Number(total) };
       },
-      keepUnusedDataFor,
     }),
     getRunnerDetail: builder.query<Runner, string>({
       query: (id) => `runners/${id}`,
     }),
-    getJobList: builder.query<Job[], void | Partial<UrlParams>>({
-      query: (params: UrlParams = {}) => {
-        return urlParamsBuilder({ base: 'jobs', ...params });
+    getJobList: builder.query<{ items: Job[]; total: number }, Partial<UrlParams> | void>({
+      query: (params: UrlParams = {}) => ({
+        url: urlParamsBuilder({ base: 'jobs', ...params }),
+      }),
+      transformResponse: (response: Job[], meta) => {
+        // Získání konkrétní hlavičky
+        const total = meta?.response?.headers.get('x-filtered-count');
+        return { items: response, total: Number(total) };
       },
     }),
     getJobDetail: builder.query<Job, string>({
@@ -109,5 +118,5 @@ export const selectAllJobs = runnerApi.endpoints.getJobList.select();
 export const selectSuccessfulJobs = createSelector(
   [selectAllJobs],
   (jobList) =>
-    jobList?.data?.filter((job) => job.state === JobState.SUCCESS) || [],
+    jobList?.data?.items.filter((job) => job.state === JobState.SUCCESS) || [],
 );

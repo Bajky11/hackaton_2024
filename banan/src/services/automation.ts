@@ -60,12 +60,12 @@ export const automationApi = createApi({
   endpoints: (builder) => ({
     getAutomationList: builder.query<{ items: Automation[]; total: number }, Partial<UrlParams> | void>({
       query: (params: UrlParams = {}) => ({
-        url: urlParamsBuilder({ base: 'automations', ...params }),
+        url: urlParamsBuilder({ base: 'automations', ...params })
       }),
       transformResponse: (response: Automation[], meta) => {
         // Získání konkrétní hlavičky
         const total = meta?.response?.headers.get('x-filtered-count');
-        return { items: response, total: Number(total) };
+        return { items: response, total: Number(total), headers: meta?.response?.headers };
       },
     }),
     getAutomationDetail: builder.query<Automation, string>({

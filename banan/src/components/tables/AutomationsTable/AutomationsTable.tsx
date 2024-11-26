@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Order, QueryOperator } from '@/services/settings';
 import { useGetAutomationListQuery } from '@/services/automation';
 import { Skeleton, Stack, Typography, useMediaQuery } from '@mui/material';
@@ -82,7 +82,9 @@ const AutomationsTable = () => {
     router.push(`/app/automations/${row.id}`);
   };
 
-  const LOADING = isAutomationsListLoading || isSasListLoading;
+  useEffect(() => {
+    console.log(automationsList);
+  }, [automationsList]);
 
   return (
     <Stack spacing={2}>
@@ -125,7 +127,8 @@ const AutomationsTable = () => {
         loading={isFetching}
         rowCount={automationsList?.total}
         getQueryOptions={(options) => setQueryOptionsAutomations(options)}
-        rows={automationsList ? automationsList.items : []}
+        rows={(automationsList ? automationsList.items : []).map((item, i) => ({ ...item, idx: i }))}
+        getRowId={(row) => row.idx}
         columns={columns}
         onRowClick={handleRowClick}
       />

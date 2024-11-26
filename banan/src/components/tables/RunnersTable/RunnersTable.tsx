@@ -10,7 +10,7 @@ import {
 } from '@/components/tables/RunnersTable/contants';
 import { RunnerTableStateSearch } from '@/components/tables/RunnersTable/components/RunnersTableStateSearch';
 import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/TableComboBox';
-import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
+import { QueryOptions, StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -22,13 +22,22 @@ const RunnersTable = () => {
   const [organizationComboBoxValue, setOrganizationComboBoxValue] =
     useState('');
 
+  const [queryOptionsRunners, setQueryOptionsRunners] = React.useState<QueryOptions>({
+    page: 1,
+    limit: 20,
+  });
+
   const {
-    data: runnerList = [],
+    data: runnerList,
     isLoading,
     error,
+    isFetching
   } = useGetRunnerListQuery({
     search: searchValue,
-    limit: 20,
+    limit: queryOptionsRunners.limit,
+    page: queryOptionsRunners.page,
+    sort: queryOptionsRunners?.sort,
+    order: queryOptionsRunners?.order,
     query: [
       runnerGroupComboBoxValue
         ? {
@@ -44,15 +53,19 @@ const RunnersTable = () => {
           value: organizationComboBoxValue,
         }
         : undefined,
+      ...(queryOptionsRunners.query || []),
     ].filter(Boolean),
   });
 
-  if (isLoading) return 'loading';
   if (error) return 'error';
 
   const handleRowClick = (row: any) => {
     router.push(`/app/runners/${row.id}`);
   };
+
+  function setQueryOptionsAutomations(options: any): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <Stack spacing={2}>
@@ -87,9 +100,12 @@ const RunnersTable = () => {
         />
       </Stack>
       <StyledResponsiveDataGrid
-        rows={runnerList}
+        loading={isFetching}
+        rows={runnerList?.items}
+        getQueryOptions={(options) => setQueryOptionsRunners(options)}
         columns={columns}
         onRowClick={handleRowClick}
+        rowCount={runnerList?.total}
       />
     </Stack>
   );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGetJobListQuery } from '@/services/runner';
 import { QueryFilter } from '@/services/settings';
-import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
+import { QueryOptions, StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { columns } from '@/components/tables/JobsTable/constants';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
@@ -17,18 +17,30 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
   const [searchValue, setSearchValue] = useState('');
   const isMobile = useMediaQuery('(max-width:600px)');
 
+  const [queryOptionsJobs, setQueryOptionsJobs] = React.useState<QueryOptions>({
+    page: 1,
+    limit: 20,
+  });
+
   const extendedQuery = {
     query: [...query].filter(Boolean),
   };
 
   const {
-    data: jobsList = [],
+    data: jobsList,
     isLoading,
     error,
+    isFetching
   } = useGetJobListQuery({
-    query: extendedQuery.query,
+    page: queryOptionsJobs.page,
+    sort: queryOptionsJobs?.sort,
+    order: queryOptionsJobs?.order,
+    limit: queryOptionsJobs.limit,
+    query: [
+      ...extendedQuery.query,
+      ...(queryOptionsJobs.query || [])
+    ],
     search: searchValue,
-    limit: 30,
   });
 
   const handleRowClick = (row: any) => {
@@ -53,7 +65,10 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
       </Stack>
 
       <StyledResponsiveDataGrid
-        rows={jobsList}
+        loading={isFetching}
+        rowCount={jobsList?.total}
+        getQueryOptions={(options) => setQueryOptionsJobs(options)}
+        rows={jobsList ? jobsList.items : []}
         columns={columns}
         onRowClick={handleRowClick}
       />

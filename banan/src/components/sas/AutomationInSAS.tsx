@@ -22,7 +22,7 @@ export default function AutomationInSAS(): JSX.Element {
     useState<ShowAutomationStatisticContext | null>(null);
   const { id } = useParams() as { id: string };
 
-  const { data: automationList = [], isLoading } = useGetAutomationListQuery({
+  const { data: automationList, isLoading } = useGetAutomationListQuery({
     query: createBaseQuery(id),
   });
 
@@ -32,13 +32,13 @@ export default function AutomationInSAS(): JSX.Element {
     return <Typography>Načítání...</Typography>;
   }
 
-  const totalFail = automationList.filter(
+  const totalFail = automationList ? automationList.items.filter(
     (item) => item.state === 'FAILED',
-  ).length;
+  ).length : 0;
 
-  const totalSuccess = automationList.filter(
+  const totalSuccess = automationList ? automationList.items.filter(
     (item) => item.state !== 'FAILED',
-  ).length;
+  ).length : 0;
 
   const afterGraphClickQueries: QueryFilter[] =
     showStatisticContext === null

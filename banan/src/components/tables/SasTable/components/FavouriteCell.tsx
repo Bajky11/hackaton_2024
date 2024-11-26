@@ -22,7 +22,8 @@ export const FavoriteCell = ({
 
   if (!user) return 'Loading favorite items..';
 
-  const handleFavoriteToggle = async () => {
+  const handleFavoriteToggle = async (event) => {
+    event.stopPropagation()
     setLoading(true);
     try {
       if (isFavorite) {

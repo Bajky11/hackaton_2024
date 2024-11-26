@@ -66,7 +66,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <AppProvider
       navigation={NAVIGATION}
       branding={{
-        logo: <img src="/snap_logo.png" alt="App logo" />,
+        logo: <img src="/logo_light.png" alt="App logo" />,
         title: 'SNAP',
       }}
       router={{

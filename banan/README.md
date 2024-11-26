@@ -1,7 +1,9 @@
-SPUŠTENÍ APLIKACE
+## SPUŠTENÍ APLIKACE
 
-- npm run dev
+* cd banan
+* npm run dev
 
+## Technické detaily
 ROUTER APLIKACE
 
 - V složce src/app

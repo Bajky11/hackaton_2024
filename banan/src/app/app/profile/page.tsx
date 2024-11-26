@@ -6,11 +6,6 @@ import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/T
 export function ProfilePage() {
   return (
     <Stack pt={2} spacing={1.5}>
-      <h2>
-        Hele já nevím jestli tohle sem dávat nebo ne.. kdyžtak napište doskupiny
-        a domluvíme se, je to zas asi dost práce a testování ale ZAJIMAVA
-        FEATURE kterou nikdo mit nebude
-      </h2>
       <Section
         heading="Individualization"
         description="Individualization will tailor the search results to you!"

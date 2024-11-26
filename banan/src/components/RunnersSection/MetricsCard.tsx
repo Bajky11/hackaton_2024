@@ -62,6 +62,7 @@ export function MetricsCard({
     >
       <Typography
         fontWeight="bold"
+        textAlign='center'
         variant={isMobile ? 'h7' : 'h6'}
         color={headingTextColor}
         textTransform={'uppercase'}

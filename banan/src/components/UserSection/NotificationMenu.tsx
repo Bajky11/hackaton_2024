@@ -81,6 +81,7 @@ function NotificationsMenu() {
         id="notif-menu"
         anchorEl={anchorEl}
         open={open}
+
         onClose={handleClose}
         PaperProps={{
           style: {

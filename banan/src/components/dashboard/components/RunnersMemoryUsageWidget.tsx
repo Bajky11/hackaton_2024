@@ -1,8 +1,8 @@
-import { Card, Box, Typography, useTheme } from '@mui/material';
+import { Card, Box, Typography, useTheme, IconButton } from '@mui/material';
 import React from 'react'
-import RunnerAvailabilityBarChart from './graphs/RunnerAvailabilityBarChart';
-import { Job, MetricWithRunner, Runner } from '@/services/runner';
+import { MetricWithRunner, Runner } from '@/services/runner';
 import RunnerMemoryUsageBarChart from './graphs/RunnerMemoryUsageBarChart';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const RunnersMemoryUsageWidget = ({ runners, metricWithRunners }: { runners: Runner[], metricWithRunners: MetricWithRunner[] }) => {
 
@@ -79,10 +79,6 @@ const RunnersMemoryUsageWidget = ({ runners, metricWithRunners }: { runners: Run
     };
 
     const memory = groupedMemoryUsage();
-
-    console.log(memory);
-
-
     return (
         <Card sx={{
             p: 3,
@@ -97,6 +93,9 @@ const RunnersMemoryUsageWidget = ({ runners, metricWithRunners }: { runners: Run
         }}>
             <Box sx={{ display: 'flex', width: "100%", pb: 2 }}>
                 <Typography variant='h6' sx={{ fontWeight: "bold", width: "100%" }}>{"Memory usage of runners"}</Typography>
+                <IconButton>
+                    <MenuIcon />
+                </IconButton>
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>

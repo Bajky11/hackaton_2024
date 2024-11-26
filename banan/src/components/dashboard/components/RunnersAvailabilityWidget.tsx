@@ -1,8 +1,9 @@
-import { Card, Box, Typography, useTheme } from '@mui/material'
+import { Card, Box, Typography, useTheme, IconButton } from '@mui/material'
 import { title } from 'process'
 import React from 'react'
 import RunnerAvailabilityBarChart from './graphs/RunnerAvailabilityBarChart';
 import { Runner } from '@/services/runner';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const RunnersAvailabilityWidget = ({ runners }: { runners: Runner[] }) => {
 
@@ -22,6 +23,9 @@ const RunnersAvailabilityWidget = ({ runners }: { runners: Runner[] }) => {
         }}>
             <Box sx={{ display: 'flex', width: "100%", pb: 2 }}>
                 <Typography variant='h6' sx={{ fontWeight: "bold", width: "100%" }}>{"Availability of runners"}</Typography>
+                <IconButton>
+                    <MenuIcon />
+                </IconButton>
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>

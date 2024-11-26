@@ -3,9 +3,9 @@ import { useRouter } from 'next/navigation';
 import { useGetJobListQuery } from '@/services/runner';
 import { QueryFilter } from '@/services/settings';
 import { QueryOptions, StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
-import { columns } from '@/components/tables/JobsTable/constants';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
+import { columns } from './constants';
 
 interface JobDataGridRowParams {
   query: QueryFilter[];

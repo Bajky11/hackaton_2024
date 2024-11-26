@@ -25,6 +25,7 @@ const SasTable = () => {
     data: sasList = [],
     isLoading: isSasListLoading,
     error: sasListError,
+    isFetching
   } = useGetSASListQuery({
     search: searchValue,
     limit: 100,
@@ -53,19 +54,18 @@ const SasTable = () => {
     }))
     .sort((a, b) => (a.favorite === b.favorite ? 0 : a.favorite ? -1 : 1));
 
-  if (isSasListLoading || loading) return 'loading';
   if (sasListError) return 'error';
 
   return (
     <Stack spacing={2} padding={2}>
+      <Typography fontSize={30} fontWeight="bold" pr={2}>
+        Sas Table
+      </Typography>
       <Stack
         direction={isMobile ? 'column' : 'row'}
         spacing={2}
         justifyContent="flex-end"
       >
-        <Typography fontSize={30} fontWeight="bold" pr={2}>
-          Sas Table
-        </Typography>
         <TableSearchField
           value={searchValue}
           setValue={setSearchValue}
@@ -74,26 +74,28 @@ const SasTable = () => {
       </Stack>
       <StyledResponsiveDataGrid
         rows={rows}
+        loading={isFetching}
+        rowCount={17}
         columns={columns.map((column) =>
           column.field === 'favorite'
             ? {
-                ...column,
-                renderCell: (params) => (
-                  <FavoriteCell
-                    isFavorite={params.row.favorite}
-                    sasName={params.row.name}
-                    onUpdate={() => {
-                      setLoading(true);
-                      fetchFavorites(user?.id)
-                        .then(setFavorites)
-                        .catch((error) =>
-                          console.error('Failed to update favorites:', error),
-                        )
-                        .finally(() => setLoading(false));
-                    }}
-                  />
-                ),
-              }
+              ...column,
+              renderCell: (params) => (
+                <FavoriteCell
+                  isFavorite={params.row.favorite}
+                  sasName={params.row.name}
+                  onUpdate={() => {
+                    setLoading(true);
+                    fetchFavorites(user?.id)
+                      .then(setFavorites)
+                      .catch((error) =>
+                        console.error('Failed to update favorites:', error),
+                      )
+                      .finally(() => setLoading(false));
+                  }}
+                />
+              ),
+            }
             : column,
         )}
         onRowClick={handleRowClick}

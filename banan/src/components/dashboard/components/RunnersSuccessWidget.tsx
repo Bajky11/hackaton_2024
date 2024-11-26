@@ -43,7 +43,7 @@ const RunnersSuccessWidget = ({ title, subtitle, color, data }: IRunnersSuccessW
             boxShadow: 0
         }}>
             <Box sx={{ display: 'flex', width: "100%" }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', pb: !subtitle ? 2 : 0, color }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', pb: !subtitle ? 1.5 : 0, color }}>
                     <Typography variant='h6' sx={{ fontWeight: "bold", color: color, width: "100%" }}>{title}</Typography>
                     {subtitle && <Typography lineHeight={1} variant='caption' sx={{ fontWeight: "bold" }}>{subtitle}</Typography>}
                 </Box>

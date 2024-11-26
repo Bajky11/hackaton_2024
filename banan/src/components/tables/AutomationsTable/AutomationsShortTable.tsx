@@ -25,7 +25,7 @@ const AutomationShortDataGrid = ({
   };
 
   const {
-    data: automationList = [],
+    data: automationList,
     isLoading,
     error,
   } = useGetAutomationListQuery({
@@ -40,14 +40,15 @@ const AutomationShortDataGrid = ({
 
   return (
     <Stack spacing={2} pt={2}>
+      <Typography fontSize={30} fontWeight={'bold'} pr={2}>
+        Automations Table
+      </Typography>
       <Stack
         direction={isMobile ? 'column' : 'row'}
         spacing={2}
         justifyContent={'flex-end'}
       >
-        <Typography fontSize={30} fontWeight={'bold'} pr={2}>
-          Automation Table
-        </Typography>
+
         <TableSearchField
           value={searchValue}
           setValue={setSearchValue}
@@ -56,9 +57,10 @@ const AutomationShortDataGrid = ({
       </Stack>
 
       <StyledResponsiveDataGrid
-        rows={automationList}
+        rows={automationList ? automationList.items : []}
         columns={columnsShort}
         onRowClick={handleRowClick}
+        rowCount={automationList?.items.length}
       />
     </Stack>
   );

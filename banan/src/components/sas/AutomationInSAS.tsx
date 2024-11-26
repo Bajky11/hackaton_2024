@@ -55,7 +55,7 @@ export default function AutomationInSAS(): JSX.Element {
       }}
     >
       {/* Graf SuccessRate */}
-      <Box width={370}>
+      {/* <Box width={370}>
         <SuccessRate
           title="Automatizace"
           data={{
@@ -75,10 +75,10 @@ export default function AutomationInSAS(): JSX.Element {
             })
           }
         />
-      </Box>
+      </Box> */}
 
       {/* Tlačítko pro zrušení filtru */}
-      {showStatisticContext && (
+      {/* {showStatisticContext && (
         <Button
           variant="outlined"
           color="primary"
@@ -89,7 +89,7 @@ export default function AutomationInSAS(): JSX.Element {
         >
           Zrušit filtr
         </Button>
-      )}
+      )} */}
 
       {/* Tabulka s filtrovanými daty */}
       <AutomationShortDataGrid query={afterGraphClickQueries} navigate={true} />

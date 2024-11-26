@@ -5,6 +5,8 @@ export const columns: GridColDef[] = [
   {
     field: 'favorite',
     headerName: 'Favorite',
+    filterable: false,
+    sortable: false,
     renderCell: (params) => {
       return (
         <FavoriteCell
@@ -14,5 +16,5 @@ export const columns: GridColDef[] = [
       );
     },
   },
-  { field: 'name', headerName: 'Sas Name', flex: 1 },
+  { field: 'name', headerName: 'Sas Name', flex: 1, filterable: false, sortable: false },
 ];

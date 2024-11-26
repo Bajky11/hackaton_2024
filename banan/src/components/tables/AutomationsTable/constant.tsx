@@ -60,6 +60,13 @@ export const columnsShort: GridColDef[] = [
     sortable: true,
   },
   {
+    field: 'last_activity',
+    headerName: 'Last activity',
+    width: 200,
+    sortable: true,
+    valueGetter: (value) => `${dayjs(value).format('YYYY-M-D HH:mm:ss')}`,
+  },
+  {
     field: 'state',
     headerName: 'State',
     flex: 1,
@@ -74,12 +81,5 @@ export const columnsShort: GridColDef[] = [
         }}
       />
     ),
-  },
-  {
-    field: 'last_activity',
-    headerName: 'Last activity',
-    width: 200,
-    sortable: true,
-    valueGetter: (value) => `${dayjs(value).format('YYYY-M-D HH:mm:ss')}`,
-  },
+  }
 ];

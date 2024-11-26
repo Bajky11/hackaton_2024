@@ -10,6 +10,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton as MuiIconButton,
+  Divider,
 } from '@mui/material';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -83,10 +84,14 @@ function NotificationsMenu() {
         onClose={handleClose}
         PaperProps={{
           style: {
-            minWidth: `${longestMessage.length * 11}px`, // Dynamická šířka okna
+            minWidth: `${longestMessage.length * 8}px`, // Dynamická šířka okna
           },
         }}
       >
+        <Typography sx={{ px: 2, pt: 2, pb: 2 }} lineHeight={1} variant="subtitle1">
+          Automations
+        </Typography>
+        <Divider />
         {isLoading && (
           <MenuItem>
             <CircularProgress size={24} />
@@ -106,17 +111,19 @@ function NotificationsMenu() {
           notifications.map((notification) => (
             <MenuItem key={notification.unique_id}>
               <ListItemText
-                primary={
-                  <Typography color="error" style={{ wordWrap: 'break-word' }}>
-                    {notification.message}
-                  </Typography>
-                }
+                sx={{ px: 1, py: 0.5 }}
+                primary={notification.dataId}
+                // <Typography color="error" style={{ wordWrap: 'break-word' }}>
+                //   {notification.message}
+                // </Typography>
+                secondary={notification.state}
                 onClick={() => handleNotificationClick(notification.link)}
               />
               <ListItemSecondaryAction>
                 <MuiIconButton
                   edge="end"
                   aria-label="delete"
+                  size='medium'
                   onClick={() =>
                     handleDeleteNotification(notification.unique_id)
                   }

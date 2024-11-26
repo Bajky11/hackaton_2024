@@ -9,6 +9,8 @@ export type Notification = {
   type: 'automation' | 'user-action' | 'system'; // Typ notifikace
   message: string; // Zpráva k zobrazení
   link: string; // Odkaz na detail
+  dataId: string;
+  state?: string;
 };
 
 export const notificationsApi = createApi({
@@ -32,7 +34,9 @@ export const notificationsApi = createApi({
           id: item.id,
           type: item.type,
           message: item.message || `Automation id ${item.id} failed`,
+          dataId: item.id,
           link: item.link || `/app/automations/${item.id}`,
+          state: "failed"
         }));
 
         const total =

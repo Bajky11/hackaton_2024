@@ -64,7 +64,7 @@ export const automationApi = createApi({
       }),
       transformResponse: (response: Automation[], meta) => {
         // Získání konkrétní hlavičky
-        const total = meta?.response?.headers.get('x-filtered-count');
+        const total = meta?.response?.headers.get('X-Filtered-Count');
         return { items: response, total: Number(total), headers: meta?.response?.headers };
       },
     }),

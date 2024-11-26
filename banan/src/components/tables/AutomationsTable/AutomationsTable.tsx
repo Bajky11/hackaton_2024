@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from '@/components/tables/AutomationsTable/constant';
 import { useGetSASListQuery } from '@/services/sas';
 import { useGetAutomationTypeListQuery } from '@/services/automation';
+import { fetchCounts } from '@/functions/fetch/fetchCounts';
 
 const AutomationsTable = () => {
   const router = useRouter();
@@ -82,10 +83,6 @@ const AutomationsTable = () => {
     router.push(`/app/automations/${row.id}`);
   };
 
-  useEffect(() => {
-    console.log(automationsList);
-  }, [automationsList]);
-
   return (
     <Stack spacing={2}>
       <Typography fontSize={30} fontWeight={'bold'}>
@@ -125,7 +122,7 @@ const AutomationsTable = () => {
       </Stack>
       <StyledResponsiveDataGrid
         loading={isFetching}
-        rowCount={automationsList?.total}
+        rowCount={52}
         getQueryOptions={(options) => setQueryOptionsAutomations(options)}
         rows={(automationsList ? automationsList.items : []).map((item, i) => ({ ...item, idx: i }))}
         getRowId={(row) => row.idx}

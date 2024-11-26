@@ -23,9 +23,6 @@ const RunnersAvailabilityWidget = ({ runners }: { runners: Runner[] }) => {
         }}>
             <Box sx={{ display: 'flex', width: "100%", pb: 2 }}>
                 <Typography variant='h6' sx={{ fontWeight: "bold", width: "100%" }}>{"Availability of runners"}</Typography>
-                <IconButton>
-                    <MenuIcon />
-                </IconButton>
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>

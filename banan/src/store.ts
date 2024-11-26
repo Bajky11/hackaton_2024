@@ -9,7 +9,7 @@ import { notificationsApi } from '@/services/notifications';
 
 const loggerMiddleware: Middleware = (storeAPI) => (next) => (action) => {
   const result = next(action);
-  console.log('Updated state:', storeAPI.getState());
+  // console.log('Updated state:', storeAPI.getState());
   return result;
 };
 

@@ -105,7 +105,7 @@ const RunnersTable = () => {
         getQueryOptions={(options) => setQueryOptionsRunners(options)}
         columns={columns}
         onRowClick={handleRowClick}
-        rowCount={runnerList?.total}
+        rowCount={699}
       />
     </Stack>
   );

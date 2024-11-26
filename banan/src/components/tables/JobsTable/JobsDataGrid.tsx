@@ -66,7 +66,7 @@ const JobsDataGrid = ({ query, navigate }: JobDataGridRowParams) => {
 
       <StyledResponsiveDataGrid
         loading={isFetching}
-        rowCount={jobsList?.total}
+        rowCount={659}
         getQueryOptions={(options) => setQueryOptionsJobs(options)}
         rows={jobsList ? jobsList.items : []}
         columns={columns}

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { QueryOperator } from '@/services/settings';
+import { Order, QueryOperator } from '@/services/settings';
 import { useGetAutomationListQuery } from '@/services/automation';
 import { Stack, Typography, useMediaQuery } from '@mui/material';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/TableComboBox';
-import { StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
+import { QueryOptions, StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
 import { useRouter } from 'next/navigation';
 import { columns } from '@/components/tables/AutomationsTable/constant';
 import { useGetSASListQuery } from '@/services/sas';
@@ -19,6 +19,11 @@ const AutomationsTable = () => {
   const [sasComboBoxValue, setSasComboBoxValue] = useState('');
   const [stateComboBoxValue, setStateComboBoxValue] = useState('');
 
+  const [queryOptionsAutomations, setQueryOptionsAutomations] = React.useState<QueryOptions>({
+    page: 1,
+    limit: 20,
+  });
+
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const {
@@ -27,7 +32,10 @@ const AutomationsTable = () => {
     error: automationsListError,
   } = useGetAutomationListQuery({
     search: searchValue,
-    limit: 20,
+    limit: queryOptionsAutomations.limit,
+    page: queryOptionsAutomations.page,
+    sort: queryOptionsAutomations?.sort,
+    order: queryOptionsAutomations?.order,
     query: [
       sasComboBoxValue
         ? {
@@ -50,6 +58,7 @@ const AutomationsTable = () => {
           value: typeComboBoxValue,
         }
         : undefined,
+      ...(queryOptionsAutomations.query || []),
     ].filter(Boolean),
   });
 
@@ -117,6 +126,9 @@ const AutomationsTable = () => {
         />
       </Stack>
       <StyledResponsiveDataGrid
+        loading={isAutomationsListLoading}
+        rowCount={52}
+        getQueryOptions={(options) => setQueryOptionsAutomations(options)}
         rows={automationsList}
         columns={columns}
         onRowClick={handleRowClick}

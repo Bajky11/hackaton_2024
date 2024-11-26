@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Order, QueryOperator } from '@/services/settings';
 import { useGetAutomationListQuery } from '@/services/automation';
-import { Stack, Typography, useMediaQuery } from '@mui/material';
+import { Skeleton, Stack, Typography, useMediaQuery } from '@mui/material';
 import { TableSearchField } from '@/components/buildingBlocks/dataGrid/components/TableSearchField';
 import { TableComboBox } from '@/components/buildingBlocks/dataGrid/components/TableComboBox';
 import { QueryOptions, StyledResponsiveDataGrid } from '@/components/buildingBlocks/dataGrid/StyledResponsiveDataGrid';
@@ -27,9 +27,10 @@ const AutomationsTable = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const {
-    data: automationsList = [],
+    data: automationsList,
     isLoading: isAutomationsListLoading,
     error: automationsListError,
+    isFetching
   } = useGetAutomationListQuery({
     search: searchValue,
     limit: queryOptionsAutomations.limit,
@@ -80,7 +81,7 @@ const AutomationsTable = () => {
 
   console.log('Type List:', typeList);
 
-  if (isAutomationsListLoading || isSasListLoading) return 'loading';
+  // if (isAutomationsListLoading || isSasListLoading) return 'loading';
   if (automationsListError || sasListError) return 'error';
 
   const handleRowClick = (row: any) => {
@@ -88,10 +89,12 @@ const AutomationsTable = () => {
     router.push(`/app/automations/${row.id}`);
   };
 
+  const LOADING = isAutomationsListLoading || isSasListLoading;
+
   return (
     <Stack spacing={2}>
       <Typography fontSize={30} fontWeight={'bold'}>
-        Automations Table
+        {"Automations Table"}
       </Typography>
       <Stack
         direction={isMobile ? 'column' : 'row'}
@@ -126,10 +129,10 @@ const AutomationsTable = () => {
         />
       </Stack>
       <StyledResponsiveDataGrid
-        loading={isAutomationsListLoading}
-        rowCount={52}
+        loading={isFetching}
+        rowCount={automationsList?.total}
         getQueryOptions={(options) => setQueryOptionsAutomations(options)}
-        rows={automationsList}
+        rows={automationsList ? automationsList.items : []}
         columns={columns}
         onRowClick={handleRowClick}
       />

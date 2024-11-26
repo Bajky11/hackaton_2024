@@ -8,11 +8,12 @@ import { Job, JobState } from '@/services/runner';
 
 interface IRunnersSuccessWidgetProps {
     title: string;
+    subtitle?: string;
     color: string;
     data: Job[];
 }
 
-const RunnersSuccessWidget = ({ title, color, data }: IRunnersSuccessWidgetProps) => {
+const RunnersSuccessWidget = ({ title, subtitle, color, data }: IRunnersSuccessWidgetProps) => {
 
     const theme = useTheme();
 
@@ -42,7 +43,10 @@ const RunnersSuccessWidget = ({ title, color, data }: IRunnersSuccessWidgetProps
             boxShadow: 0
         }}>
             <Box sx={{ display: 'flex', width: "100%" }}>
-                <Typography variant='h6' sx={{ fontWeight: "bold", color: color, width: "100%" }}>{title}</Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', pb: !subtitle ? 2 : 0, color }}>
+                    <Typography variant='h6' sx={{ fontWeight: "bold", color: color, width: "100%" }}>{title}</Typography>
+                    {subtitle && <Typography lineHeight={1} variant='caption' sx={{ fontWeight: "bold" }}>{subtitle}</Typography>}
+                </Box>
                 <Typography variant='h6' sx={{ fontWeight: "bold", width: "100%", display: "flex", justifyContent: "flex-end", pr: 2 }}>{data.length}</Typography>
             </Box>
 
@@ -63,12 +67,13 @@ const RunnersSuccessWidget = ({ title, color, data }: IRunnersSuccessWidgetProps
                     </Box>
                 </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: "center", width: "100%", pl: 0 }}>
+                <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: 'flex-end', alignItems: "center", width: "100%", pl: 0 }}>
                     <RunnerSuccessPieChart
                         success={success}
                         failed={failed}
                         color={color}
                     />
+                    <Typography variant='caption'>Success / Failed</Typography>
                 </Box>
             </Box>
         </Card>

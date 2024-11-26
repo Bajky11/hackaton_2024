@@ -59,12 +59,14 @@ const DashboardLayout = () => {
                 <RunnersSuccessWidget
                     title="DEPLOYMENTS"
                     color="#898989"
+                    subtitle='NON-PRODUCTION'
                     data={deploymentsNonProduction}
                 />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 6, lg: 3 }}  >
                 <RunnersSuccessWidget
                     title="DEPLOYMENTS"
+                    subtitle='PRODUCTION'
                     color="#4BA43A"
                     data={deploymentsProduction}
                 />

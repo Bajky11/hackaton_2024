@@ -3,7 +3,7 @@
 import '../styles/globals.css';
 import { Provider } from 'react-redux';
 import { store } from '@/store';
-import React from 'react';
+import React, { Suspense } from 'react';
 import Head from 'next/head';
 import AppInitializer from '@/components/UserSection/AppInitializer';
 
@@ -17,10 +17,12 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         />
       </Head>
       <body>
-        <Provider store={store}>
-          <AppInitializer />
-          {children}
-        </Provider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Provider store={store}>
+            <AppInitializer />
+            {children}
+          </Provider>
+        </Suspense>
       </body>
     </html>
   );

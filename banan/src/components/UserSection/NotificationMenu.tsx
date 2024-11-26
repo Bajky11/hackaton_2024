@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Badge,
   IconButton,
@@ -23,14 +21,21 @@ function NotificationsMenu() {
   const open = Boolean(anchorEl);
 
   const [localNotifications, setLocalNotifications] = useState<any[]>([]);
+  const [initialized, setInitialized] = useState(false); // Stav pro inicializaci dat
 
   const router = useRouter();
 
   const { data, isLoading, error } = useGetFailedAutomationListQuery();
 
-  // Počet notifikací a jejich zdroj
-  const notifications =
-    localNotifications.length > 0 ? localNotifications : data?.items || [];
+  // Inicializace pouze při načtení dat
+  useEffect(() => {
+    if (!initialized && data?.items) {
+      setLocalNotifications(data.items);
+      setInitialized(true);
+    }
+  }, [data, initialized]);
+
+  const notifications = localNotifications;
   const notificationCount = notifications.length;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -46,11 +51,8 @@ function NotificationsMenu() {
   };
 
   const handleDeleteNotification = (id: string) => {
-    // Odebereme notifikaci z lokálního stavu
     setLocalNotifications((prev) =>
-      prev.length > 0
-        ? prev.filter((notification) => notification.unique_id !== id)
-        : data?.items.filter((notification) => notification.unique_id !== id) || [],
+      prev.filter((notification) => notification.unique_id !== id),
     );
   };
 
@@ -115,7 +117,9 @@ function NotificationsMenu() {
                 <MuiIconButton
                   edge="end"
                   aria-label="delete"
-                  onClick={() => handleDeleteNotification(notification.unique_id)}
+                  onClick={() =>
+                    handleDeleteNotification(notification.unique_id)
+                  }
                 >
                   <DeleteIcon />
                 </MuiIconButton>
